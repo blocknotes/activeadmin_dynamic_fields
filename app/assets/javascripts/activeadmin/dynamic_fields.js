@@ -1,4 +1,4 @@
-
+// Evaluate a condition
 function dfEvalCondition( el, args ) {
   if( args.fn ) {
     if( args.fn && window[args.fn] ) return !window[args.fn]( el );
@@ -25,6 +25,7 @@ function dfEvalCondition( el, args ) {
   return undefined;
 }
 
+// Prepare a field
 function dfSetupField( el ) {
   var action = el.data( 'action' );
   var target, args = {};
@@ -82,13 +83,26 @@ function dfSetupField( el ) {
   }
 }
 
+// Set the value of an element
 function dfSetValue( el, val ) {
   if( el.attr('type') != 'checkbox' ) el.val( val );
   else el.prop('checked', val == '1');
   el.trigger( 'change' );
 }
 
+// Init
 $(document).ready( function() {
+  // Setup dynamic fields
+  $('.active_admin .input [data-if], .active_admin .input [data-function], .active_admin .input [data-eq], .active_admin .input [data-not]').each( function() {
+    dfSetupField( $(this) );
+  });
+  // Setup dynamic fields for has many associations
+  $('.active_admin .has_many_container').on( 'has_many_add:after', function( e, fieldset, container ) {
+    $('.active_admin .input [data-if], .active_admin .input [data-function], .active_admin .input [data-eq], .active_admin .input [data-not]').each( function() {
+      dfSetupField( $(this) );
+    });
+  });
+  // Open content in dialog
   $('.active_admin [data-df-dialog]').on( 'click', function( event ) {
     event.preventDefault();
     if( $('#df-dialog').length == 0 ) $('body').append( '<div id="df-dialog"></div>' );
@@ -101,14 +115,7 @@ $(document).ready( function() {
       $('#df-dialog').dialog({ modal: true });
     });
   });
-
-  $('.active_admin .input [data-if], .active_admin .input [data-function], .active_admin .input [data-eq], .active_admin .input [data-not]').each( function() {
-    dfSetupField( $(this) );
-  });
-
-  $('.active_admin .has_many_container').on( 'has_many_add:after', function( e, fieldset, container ) {
-    $('.active_admin .input [data-if], .active_admin .input [data-function], .active_admin .input [data-eq], .active_admin .input [data-not]').each( function() {
-      dfSetupField( $(this) );
-    });
+  $('.active_admin [data-df-icon]').each( function() {
+    $(this).append( ' &raquo;' );  // ' &bullet;'
   });
 });

@@ -6,16 +6,14 @@ Features:
 
 - set conditional checks on fields
 - trigger some actions on other fields
-- create links to load some content in a dialogs
+- create links to load some content in a dialog
 
-The easiest way to show how this plugin works is looking the examples (below).
+The easiest way to show how this plugin works is looking the examples [below](#examples-of-dynamic-fields).
 
 ## Install
 
 - Add to your Gemfile: `gem 'activeadmin_dynamic_fields'`
 - Execute bundle
-- Add at the end of your ActiveAdmin styles (_app/assets/stylesheets/active_admin.scss_):
-`@import 'activeadmin/dynamic_fields';`
 - Add at the end of your ActiveAdmin javascripts (_app/assets/javascripts/active_admin.js_):
 `//= require activeadmin/dynamic_fields`
 
@@ -106,7 +104,7 @@ Prepare the content dialog - in Active Admin Author config:
 ActiveAdmin.register Author do
   # ...
   member_action :dialog do
-    content  = '<dl>'
+    content  = '<dl style="margin: 12px">'
     [:name, :age, :created_at].each do |field|
       content += "<dt>#{Author.human_attribute_name(field)}:</dt><dd>#{resource[field]}</dd>"
     end
