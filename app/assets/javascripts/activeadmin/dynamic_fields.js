@@ -102,12 +102,12 @@ $(document).ready( function() {
     });
   });
 
-  $('.active_admin [data-if], .active_admin [data-function], .active_admin [data-eq], .active_admin [data-not]').each( function() {
+  $('.active_admin .input [data-if], .active_admin .input [data-function], .active_admin .input [data-eq], .active_admin .input [data-not]').each( function() {
     dfSetupField( $(this) );
   });
 
   $('.active_admin .has_many_container').on( 'has_many_add:after', function( e, fieldset, container ) {
-    $('.active_admin [data-if], .active_admin [data-function], .active_admin [data-eq], .active_admin [data-not]').each( function() {
+    $('.active_admin .input [data-if], .active_admin .input [data-function], .active_admin .input [data-eq], .active_admin .input [data-not]').each( function() {
       dfSetupField( $(this) );
     });
   });
