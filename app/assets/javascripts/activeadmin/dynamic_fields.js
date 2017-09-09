@@ -89,7 +89,7 @@ function dfSetValue( el, val ) {
 }
 
 $(document).ready( function() {
-  $('[data-df-dialog]').on( 'click', function( event ) {
+  $('.active_admin [data-df-dialog]').on( 'click', function( event ) {
     event.preventDefault();
     if( $('#df-dialog').length == 0 ) $('body').append( '<div id="df-dialog"></div>' );
     var title = $(this).attr( 'title' );
@@ -102,12 +102,12 @@ $(document).ready( function() {
     });
   });
 
-  $('[data-if], [data-function], [data-eq], [data-not]').each( function() {
+  $('.active_admin [data-if], .active_admin [data-function], .active_admin [data-eq], .active_admin [data-not]').each( function() {
     dfSetupField( $(this) );
   });
 
-  $('.has_many_container').on( 'has_many_add:after', function( e, fieldset, container ) {
-    $('[data-if], [data-function], [data-eq], [data-not]').each( function() {
+  $('.active_admin .has_many_container').on( 'has_many_add:after', function( e, fieldset, container ) {
+    $('.active_admin [data-if], .active_admin [data-function], .active_admin [data-eq], .active_admin [data-not]').each( function() {
       dfSetupField( $(this) );
     });
   });
