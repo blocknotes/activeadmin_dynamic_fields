@@ -28,7 +28,6 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
   + **not_blank**: check if a field is not blank
 - **data-eq**: check if a field has a specific value
 - **data-not**: check if a field hasn't a specific value
-- **data-function**: check the return value of a custom function
 - **data-target**: target css selector
 - **data-action**: the action to trigger, values:
   + **hide**: hides elements
@@ -37,9 +36,8 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
   + **addClass**: adds classes
   + **setValue**: set a value
   + **callback**: call a function
-- **data-value**: value to set
-- **data-callback**: custom function for setting a value
-- **data-arg**: argument passed to the custom set function
+- **data-function**: check the return value of a custom function
+- **data-arg**: argument passed to the custom set function (as array of strings)
 
 ## Examples of dynamic fields
 
@@ -60,11 +58,11 @@ end
 
 `f.input :published, input_html: { data: { if: 'checked', action: 'addClass first second third', target: '.grp1' } }`
 
-- Set another field value if a string field is blank (with alternative syntax for data attributes):
+- Set another field value if a string field is blank:
 
-`f.input :title, input_html: { 'data-if': 'blank', 'data-action': 'setValue', 'data-target': '#article_position', 'data-value': '10' }`
+`f.input :title, input_html: { data: { if: 'blank', action: 'setValue 10', target: '#article_position' } }`
 
-- Use a custom function for conditional check (*title_not_empty()* must be available on global scope):
+- Use a custom function for conditional check (*title_not_empty()* must be available on global scope) (with alternative syntax for data attributes):
 
 `f.input :title, input_html: { 'data-function': 'title_empty', 'data-action': 'slide', 'data-target': '#article_description_input' }`
 
@@ -76,7 +74,7 @@ function title_empty( el ) {
 
 - Call a callback function as action:
 
-`f.input :published, input_html: { 'data-if': 'checked', 'data-action': 'callback', 'data-callback': 'set_title', 'data-args': '["[unpublished]"]' }`
+`f.input :published, input_html: { data: { if: 'checked', action: 'callback set_title', args: '["Unpublished !"]' } }`
 
 ```js
 function set_title( args ) {

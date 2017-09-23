@@ -58,15 +58,15 @@ function dfSetupField( el ) {
       else target.fadeOut();
     });
   }
-  else if( action == 'setValue' ) {
-    var val = el.data( 'value' ) ? el.data( 'value' ) : '';
+  else if( action.substr( 0, 8 ) == 'setValue' ) {
+    var val = action.substr( 8 ).trim();
     if( dfEvalCondition( el, args ) ) dfSetValue( target, val );
     el.on( 'change', function( event ) {
       if( dfEvalCondition( $(this), args ) ) dfSetValue( target, val );
     });
   }
-  else if( action == 'callback' ) {
-    var cb = el.data( 'callback' );
+  else if( action.substr( 0, 8 ) == 'callback' ) {
+    var cb = action.substr( 8 ).trim();
     if( cb && window[cb] ) {
       if( dfEvalCondition( el, args ) ) window[cb]( el.data( 'args' ) );
       el.on( 'change', function( event ) {
