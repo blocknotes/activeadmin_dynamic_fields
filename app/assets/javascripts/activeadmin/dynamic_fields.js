@@ -75,6 +75,15 @@ function dfSetupField( el ) {
     }
     else console.log( 'Warning - activeadmin_dynamic_fields: ' + cb + '() not available [2]' );
   }
+  else if( action.substr( 0, 8 ) == 'addClass' ) {
+    var classes = action.substr( 8 ).trim();
+    if( dfEvalCondition( el, args ) ) target.removeClass( classes );
+    else target.addClass( classes );
+    el.on( 'change', function( event ) {
+      if( dfEvalCondition( $(this), args ) ) target.removeClass( classes );
+      else target.addClass( classes );
+    });
+  }
   else if( args.fn ) {  // function without action
     dfEvalCondition( el, args );
     el.on( 'change', function( event ) {

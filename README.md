@@ -19,7 +19,7 @@ The easiest way to show how this plugin works is looking the examples [below](#e
 
 ## Options
 
-Options are passed to fields using *input_html* parameter:
+Options are passed to fields using *input_html* parameter as *data* attributes:
 
 - **data-if**: check a condition, values:
   + **checked**: check if a checkbox is checked
@@ -34,6 +34,7 @@ Options are passed to fields using *input_html* parameter:
   + **hide**: hides elements
   + **slide**: hides elements (using sliding)
   + **fade**: hides elements (using fading)
+  + **addClass**: adds classes
   + **setValue**: set a value
   + **callback**: call a function
 - **data-value**: value to set
@@ -47,7 +48,7 @@ Options are passed to fields using *input_html* parameter:
 ```rb
 form do |f|
   f.inputs 'Article' do
-    f.input :published, input_html: { 'data-if': 'not_checked', 'data-action': 'hide', 'data-target': '.grp1' }
+    f.input :published, input_html: { data: { if: 'not_checked', action: 'hide', target: '.grp1' } }
     f.input :online_date, wrapper_html: { class: 'grp1' }
     f.input :position, wrapper_html: { class: 'grp1' }
   end
@@ -55,7 +56,11 @@ form do |f|
 end
 ```
 
-- Set another field value if a string field is blank:
+- Add 3 classes (*first*, *second*, *third*) if a checkbox is true:
+
+`f.input :published, input_html: { data: { if: 'checked', action: 'addClass first second third', target: '.grp1' } }`
+
+- Set another field value if a string field is blank (with alternative syntax for data attributes):
 
 `f.input :title, input_html: { 'data-if': 'blank', 'data-action': 'setValue', 'data-target': '#article_position', 'data-value': '10' }`
 
