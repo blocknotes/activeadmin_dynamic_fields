@@ -111,20 +111,26 @@ $(document).ready( function() {
       dfSetupField( $(this) );
     });
   });
+  // Set dialog icon link
+  $('.active_admin [data-df-icon]').each( function() {
+    $(this).append( ' &raquo;' );  // ' &bullet;'
+  });
   // Open content in dialog
   $('.active_admin [data-df-dialog]').on( 'click', function( event ) {
     event.preventDefault();
-    if( $('#df-dialog').length == 0 ) $('body').append( '<div id="df-dialog"></div>' );
-    var title = $(this).attr( 'title' );
-    $.ajax({
-      url: $(this).attr( 'href' )
-    }).done( function( result ) {
-      if( title ) $('#df-dialog').attr( 'title', title );
-      $('#df-dialog').html( result );
-      $('#df-dialog').dialog({ modal: true });
-    });
-  });
-  $('.active_admin [data-df-icon]').each( function() {
-    $(this).append( ' &raquo;' );  // ' &bullet;'
+    $(this).blur();
+    if( $('#df-dialog').data( 'loading' ) != '1' ) {
+      $('#df-dialog').data( 'loading', '1' );
+      if( $('#df-dialog').length == 0 ) $('body').append( '<div id="df-dialog"></div>' );
+      var title = $(this).attr( 'title' );
+      $.ajax({
+        url: $(this).attr( 'href' )
+      }).done( function( result ) {
+        if( title ) $('#df-dialog').attr( 'title', title );
+        $('#df-dialog').html( result );
+        $('#df-dialog').dialog({ modal: true });
+        $('#df-dialog').data( 'loading', '0' );
+      });
+    }
   });
 });
