@@ -99,6 +99,61 @@ function dfSetValue( el, val ) {
   el.trigger( 'change' );
 }
 
+// Inline update - must be called binded on the editing element
+function dfUpdateField() {
+  if( $(this).data( 'loading' ) != '1' ) {
+    $(this).data( 'loading', '1' );
+    var _this = $(this);
+    var type = $(this).data( 'field-type' );
+    var new_value;
+    if( type == 'boolean' ) new_value = !$(this).data( 'field-value' );
+    else if( type == 'select' ) new_value = $(this).val();
+    else new_value = $(this).text();
+    var data = {};
+    data[$(this).data('field')] = new_value;
+    $.ajax({
+      context: _this,
+      data: { data: data },
+      method: 'POST',
+      url: $(this).data( 'save-url' ),
+      complete: function( req, status ) {
+        $(this).data( 'loading', '0' );
+      },
+      success: function( data, status, req ) {
+        if( data.status == 'error' ) {
+          if( $(this).data( 'show-errors' ) ) {
+            var result = '';
+            var message = data.message;
+            for( var key in message ) {
+              if( typeof( message[key] ) === 'object' ) {
+                if( result ) result += ' - ';
+                result += key + ': ' + message[key].join( '; ' );
+              }
+            }
+            if( result ) alert( result );
+          }
+        }
+        else {
+          $(this).data( 'field-value', new_value );
+          if( $(this).data('content') ) {
+            var old_text = $(this).text();
+            var old_class = $(this).attr( 'class' );
+            var content = $($(this).data('content'));
+            $(this).text( content.text() );
+            $(this).attr( 'class', content.attr( 'class' ) );
+            content.text( old_text );
+            content.attr( 'class', old_class );
+            $(this).data( 'content', content );
+          }
+        }
+      },
+      // error: function( req, status, error ) {
+      //   // if( $(this).data( 'show-errors' ) && req.responseJSON.message ) { }
+      // },
+    });
+  }
+}
+
 // Init
 $(document).ready( function() {
   // Setup dynamic fields
@@ -124,13 +179,30 @@ $(document).ready( function() {
       if( $('#df-dialog').length == 0 ) $('body').append( '<div id="df-dialog"></div>' );
       var title = $(this).attr( 'title' );
       $.ajax({
-        url: $(this).attr( 'href' )
-      }).done( function( result ) {
-        if( title ) $('#df-dialog').attr( 'title', title );
-        $('#df-dialog').html( result );
-        $('#df-dialog').dialog({ modal: true });
-        $('#df-dialog').data( 'loading', '0' );
+        url: $(this).attr( 'href' ),
+        complete: function( req, status ) {
+          $('#df-dialog').data( 'loading', '0' );
+        },
+        success: function( data, status, req ) {
+          if( title ) $('#df-dialog').attr( 'title', title );
+          $('#df-dialog').html( data );
+          $('#df-dialog').dialog({ modal: true });
+        },
       });
     }
+  });
+  // Inline editing
+  $('[data-field][data-field-type="boolean"][data-save-url]').each( function() {
+    $(this).on( 'click', $.proxy( dfUpdateField, $(this) ) );
+  });
+  $('[data-field][data-field-type="string"][data-save-url]' ).each( function() {
+    $(this).data( 'field-value', $(this).text() );
+    var fnUpdate = $.proxy( dfUpdateField, $(this) );
+    $(this).on( 'blur', function() {
+      if( $(this).data( 'field-value' ) != $(this).text() ) fnUpdate();
+    });
+  });
+  $('[data-field][data-field-type="select"][data-save-url]').each( function() {
+    $(this).on( 'change', $.proxy( dfUpdateField, $(this) ) );
   });
 });

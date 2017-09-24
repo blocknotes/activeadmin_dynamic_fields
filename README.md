@@ -6,6 +6,7 @@ Features:
 
 - set conditional checks on fields
 - trigger some actions on other fields
+- inline field editing
 - create links to load some content in a dialog
 
 The easiest way to show how this plugin works is looking the examples [below](#examples-of-dynamic-fields).
@@ -39,7 +40,9 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
 - **data-function**: check the return value of a custom function
 - **data-arg**: argument passed to the custom set function (as array of strings)
 
-## Examples of dynamic fields
+## Examples
+
+### Dynamic fields examples
 
 - A checkbox that hides other fields if false (ex. model *Article*):
 
@@ -97,7 +100,45 @@ function on_change_category( el ) {
 }
 ```
 
-## Example to open a dialog
+### Inline editing examples
+
+- Prepare a custom member action to save data, an *update* helper function is available (third parameter is optional, allow to filter using strong parameters):
+
+```rb
+member_action :save, method: [:post] do
+  render ActiveAdmin::DynamicFields::update( resource, params )
+  # render ActiveAdmin::DynamicFields::update( resource, params, [:published] )
+  # render ActiveAdmin::DynamicFields::update( resource, params, Article::permit_params )
+end
+```
+
+- In *index* config:
+
+```rb
+# Edit a string:
+column :title do |row|
+  div row.title, ActiveAdmin::DynamicFields::edit_string( :title, save_admin_article_path( row.id ) )
+end
+# Edit a boolean:
+column :published do |row|
+  status_tag row.published, ActiveAdmin::DynamicFields::edit_boolean( :published, save_admin_article_path( row.id ), row.published )
+end
+# Edit a select ([''] allow to have a blank value):
+column :author do |row|
+  select ActiveAdmin::DynamicFields::edit_select( :author_id, save_admin_article_path( row.id ) ) do
+    options_for_select( [''] + Author.pluck( :name, :id ), row.author_id )
+  end
+end
+```
+
+- In *show* config (less useful):
+```rb
+row :title do |row|
+  div row.title, ActiveAdmin::DynamicFields::edit_string( :title, save_admin_article_path( row.id ) )
+end
+```
+
+### Dialog example
 
 Example with 2 models: *Author* and *Article*
 
