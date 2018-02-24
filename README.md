@@ -9,7 +9,7 @@ Features:
 - inline field editing
 - create links to load some content in a dialog
 
-The easiest way to show how this plugin works is looking the examples [below](#examples-of-dynamic-fields).
+The easiest way to show how this plugin works is looking the examples [below](#examples).
 
 ## Install
 
@@ -27,6 +27,7 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
   + **not_checked**: check if a checkbox is not checked
   + **blank**: check if a field is blank
   + **not_blank**: check if a field is not blank
+  + **changed**: check if the value of an input is changed (dirty)
 - **data-eq**: check if a field has a specific value
 - **data-not**: check if a field hasn't a specific value
 - **data-target**: target css selector (from parent fieldset, look for the closest match)
@@ -45,22 +46,22 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
 
 ### Dynamic fields examples
 
-- A checkbox that hides other fields if false (ex. model *Article*):
+- A checkbox that hides other fields if is checked (ex. model *Article*):
 
 ```rb
 form do |f|
   f.inputs 'Article' do
-    f.input :published, input_html: { data: { if: 'not_checked', action: 'hide', target: '.grp1' } }
+    f.input :published, input_html: { data: { if: 'checked', action: 'hide', target: '.grp1' } }
     f.input :online_date, wrapper_html: { class: 'grp1' }
-    f.input :position, wrapper_html: { class: 'grp1' }
+    f.input :draft_notes, wrapper_html: { class: 'grp1' }
   end
   f.actions
 end
 ```
 
-- Add 3 classes (*first*, *second*, *third*) if a checkbox is true:
+- Add 3 classes (*first*, *second*, *third*) if a checkbox is not checked:
 
-`f.input :published, input_html: { data: { if: 'checked', action: 'addClass first second third', target: '.grp1' } }`
+`f.input :published, input_html: { data: { if: 'not_checked', action: 'addClass first second third', target: '.grp1' } }`
 
 - Set another field value if a string field is blank:
 
@@ -182,6 +183,8 @@ The link url is loaded via AJAX before opening the dialog.
 ## Do you like it? Star it!
 
 If you use this component just star it. A developer is more motivated to improve a project when there is some interest.
+
+Take a look at [other ActiveAdmin components](https://github.com/blocknotes?utf8=✓&tab=repositories&q=activeadmin&type=source) that I made if you are curious.
 
 ## Contributors
 

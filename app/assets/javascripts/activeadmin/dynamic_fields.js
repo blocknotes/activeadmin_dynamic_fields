@@ -1,5 +1,5 @@
 // Evaluate a condition
-function dfEvalCondition( el, args ) {
+function dfEvalCondition( el, args, on_change ) {
   if( args.fn ) {
     if( args.fn && window[args.fn] ) return !window[args.fn]( el );
     else console.log( 'Warning - activeadmin_dynamic_fields: ' + args.fn + '() not available [1]' );
@@ -15,6 +15,9 @@ function dfEvalCondition( el, args ) {
   }
   else if( args.if == 'not_blank' ) {
     return el.val().length !== 0 && el.val().trim();
+  }
+  else if( args.if == 'changed' ) {
+    return on_change;
   }
   else if( args.eq ) {
     return el.val() == args.eq;
@@ -36,59 +39,59 @@ function dfSetupField( el ) {
   if( el.data( 'target' ) ) target = el.closest( 'fieldset' ).find( el.data( 'target' ) );  // closest find for has many associations
   else if( el.data( 'gtarget' ) ) target = $( el.data( 'gtarget' ) );
   if( action == 'hide' ) {
-    if( dfEvalCondition( el, args ) ) target.hide();
+    if( dfEvalCondition( el, args, false ) ) target.hide();
     else target.show();
     el.on( 'change', function( event ) {
-      if( dfEvalCondition( $(this), args ) ) target.hide();
+      if( dfEvalCondition( $(this), args, true ) ) target.hide();
       else target.show();
     });
   }
   else if( action == 'slide' ) {
-    if( dfEvalCondition( el, args ) ) target.slideDown();
+    if( dfEvalCondition( el, args, false ) ) target.slideDown();
     else target.slideUp();
     el.on( 'change', function( event ) {
-      if( dfEvalCondition( $(this), args ) ) target.slideDown();
+      if( dfEvalCondition( $(this), args, true ) ) target.slideDown();
       else target.slideUp();
     });
   }
   else if( action == 'fade' ) {
-    if( dfEvalCondition( el, args ) ) target.fadeIn();
+    if( dfEvalCondition( el, args, false ) ) target.fadeIn();
     else target.fadeOut();
     el.on( 'change', function( event ) {
-      if( dfEvalCondition( $(this), args ) ) target.fadeIn();
+      if( dfEvalCondition( $(this), args, true ) ) target.fadeIn();
       else target.fadeOut();
     });
   }
   else if( action.substr( 0, 8 ) == 'setValue' ) {
     var val = action.substr( 8 ).trim();
-    if( dfEvalCondition( el, args ) ) dfSetValue( target, val );
+    if( dfEvalCondition( el, args, false ) ) dfSetValue( target, val );
     el.on( 'change', function( event ) {
-      if( dfEvalCondition( $(this), args ) ) dfSetValue( target, val );
+      if( dfEvalCondition( $(this), args, true ) ) dfSetValue( target, val );
     });
   }
   else if( action.substr( 0, 8 ) == 'callback' ) {
     var cb = action.substr( 8 ).trim();
     if( cb && window[cb] ) {
-      if( dfEvalCondition( el, args ) ) window[cb]( el.data( 'args' ) );
+      if( dfEvalCondition( el, args, false ) ) window[cb]( el.data( 'args' ) );
       el.on( 'change', function( event ) {
-        if( dfEvalCondition( $(this), args ) ) window[cb]( el.data( 'args' ) );
+        if( dfEvalCondition( $(this), args, true ) ) window[cb]( el.data( 'args' ) );
       });
     }
     else console.log( 'Warning - activeadmin_dynamic_fields: ' + cb + '() not available [2]' );
   }
   else if( action.substr( 0, 8 ) == 'addClass' ) {
     var classes = action.substr( 8 ).trim();
-    if( dfEvalCondition( el, args ) ) target.removeClass( classes );
+    if( dfEvalCondition( el, args, false ) ) target.removeClass( classes );
     else target.addClass( classes );
     el.on( 'change', function( event ) {
-      if( dfEvalCondition( $(this), args ) ) target.removeClass( classes );
+      if( dfEvalCondition( $(this), args, true ) ) target.removeClass( classes );
       else target.addClass( classes );
     });
   }
   else if( args.fn ) {  // function without action
-    dfEvalCondition( el, args );
+    dfEvalCondition( el, args, false );
     el.on( 'change', function( event ) {
-      dfEvalCondition( el, args );
+      dfEvalCondition( el, args, true );
     });
   }
 }
