@@ -29,7 +29,8 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
   + **not_blank**: check if a field is not blank
 - **data-eq**: check if a field has a specific value
 - **data-not**: check if a field hasn't a specific value
-- **data-target**: target css selector
+- **data-target**: target css selector (from parent fieldset, look for the closest match)
+- **data-gtarget**: target css selector globally
 - **data-action**: the action to trigger, values:
   + **hide**: hides elements
   + **slide**: hides elements (using sliding)

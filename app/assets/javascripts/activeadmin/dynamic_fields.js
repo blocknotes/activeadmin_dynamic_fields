@@ -5,10 +5,10 @@ function dfEvalCondition( el, args ) {
     else console.log( 'Warning - activeadmin_dynamic_fields: ' + args.fn + '() not available [1]' );
   }
   else if( args.if == 'checked' ) {
-    return !el.is(':checked');
+    return el.is(':checked');
   }
   else if( args.if == 'not_checked' ) {
-    return el.is(':checked');
+    return !el.is(':checked');
   }
   else if( args.if == 'blank' ) {
     return el.val().length === 0 || !el.val().trim();
@@ -33,13 +33,14 @@ function dfSetupField( el ) {
   args.eq = el.data( 'eq' );
   args.not = el.data( 'not' );
   args.fn = el.data( 'function' );
-  if( el.data( 'target' ) ) target = el.closest( 'fieldset' ).find( el.data( 'target' ) )
+  if( el.data( 'target' ) ) target = el.closest( 'fieldset' ).find( el.data( 'target' ) );  // closest find for has many associations
+  else if( el.data( 'gtarget' ) ) target = $( el.data( 'gtarget' ) );
   if( action == 'hide' ) {
-    if( dfEvalCondition( el, args ) ) target.show();
-    else target.hide();
+    if( dfEvalCondition( el, args ) ) target.hide();
+    else target.show();
     el.on( 'change', function( event ) {
-      if( dfEvalCondition( $(this), args ) ) target.show();
-      else target.hide();
+      if( dfEvalCondition( $(this), args ) ) target.hide();
+      else target.show();
     });
   }
   else if( action == 'slide' ) {
