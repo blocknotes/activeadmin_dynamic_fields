@@ -1,9 +1,20 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Author do
-  menu priority: 1
-
   permit_params :name, :email, :age, :avatar, profile_attributes: %i[id description _destroy]
+
+  member_action :dialog do
+    record = resource
+    context = Arbre::Context.new do
+      dl do
+        %i[name age created_at].each do |field|
+          dt Author.human_attribute_name(field) + ':'
+          dd record[field]
+        end
+      end
+    end
+    render plain: context
+  end
 
   index do
     selectable_column
