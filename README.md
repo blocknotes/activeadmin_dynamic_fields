@@ -108,9 +108,9 @@ function on_change_category( el ) {
 
 ```rb
 member_action :save, method: [:post] do
-  render ActiveAdmin::DynamicFields::update( resource, params )
-  # render ActiveAdmin::DynamicFields::update( resource, params, [:published] )
-  # render ActiveAdmin::DynamicFields::update( resource, params, Article::permit_params )
+  render ActiveAdmin::DynamicFields.update(resource, params)
+  # render ActiveAdmin::DynamicFields.update(resource, params, [:published])
+  # render ActiveAdmin::DynamicFields.update(resource, params, Article::permit_params)
 end
 ```
 
@@ -119,24 +119,24 @@ end
 ```rb
 # Edit a string:
 column :title do |row|
-  div row.title, ActiveAdmin::DynamicFields::edit_string( :title, save_admin_article_path( row.id ) )
+  div row.title, ActiveAdmin::DynamicFields.edit_string(:title, save_admin_article_path(row.id))
 end
 # Edit a boolean:
 column :published do |row|
-  status_tag row.published, ActiveAdmin::DynamicFields::edit_boolean( :published, save_admin_article_path( row.id ), row.published )
+  status_tag row.published, ActiveAdmin::DynamicFields.edit_boolean(:published, save_admin_article_path(row.id), row.published)
 end
 # Edit a select ([''] allow to have a blank value):
 column :author do |row|
-  select ActiveAdmin::DynamicFields::edit_select( :author_id, save_admin_article_path( row.id ) ) do
-    options_for_select( [''] + Author.pluck( :name, :id ), row.author_id )
+  select ActiveAdmin::DynamicFields.edit_select(:author_id, save_admin_article_path(row.id)) do
+    options_for_select([''] + Author.pluck(:name, :id), row.author_id)
   end
 end
 ```
 
-- In *show* config (less useful):
+- In *show* config (inside `attributes_table` block):
 ```rb
 row :title do |row|
-  div row.title, ActiveAdmin::DynamicFields::edit_string( :title, save_admin_article_path( row.id ) )
+  div row.title, ActiveAdmin::DynamicFields.edit_string(:title, save_admin_article_path(row.id))
 end
 ```
 
@@ -150,12 +150,16 @@ Prepare the content dialog - in Active Admin Author config:
 ActiveAdmin.register Author do
   # ...
   member_action :dialog do
-    content  = '<dl style="margin: 12px">'
-    [:name, :age, :created_at].each do |field|
-      content += "<dt>#{Author.human_attribute_name(field)}:</dt><dd>#{resource[field]}</dd>"
+    record = resource
+    context = Arbre::Context.new do
+      dl do
+        %i[name age created_at].each do |field|
+          dt "#{Author.human_attribute_name(field)}:"
+          dd record[field]
+        end
+      end
     end
-    content += '</dl>'
-    render plain: content
+    render plain: context
   end
   # ...
 end
@@ -170,7 +174,7 @@ ActiveAdmin.register Article do
     attributes_table do
       # ...
       row :author do
-        link_to object.author.name, dialog_admin_author_path( object.author ), title: object.author.name, 'data-df-dialog': true, 'data-df-icon': true
+        link_to object.author.name, dialog_admin_author_path(object.author), title: object.author.name, 'data-df-dialog': true, 'data-df-icon': true
       end
     end
   end
@@ -188,7 +192,7 @@ Take a look at [other ActiveAdmin components](https://github.com/blocknotes?utf8
 
 ## Contributors
 
-- [Mattia Roccoberton](http://blocknot.es) - creator, maintainer
+- [Mattia Roccoberton](http://blocknot.es): author
 
 ## License
 
