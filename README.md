@@ -1,4 +1,4 @@
-# ActiveAdmin Dynamic Fields [![Gem Version](https://badge.fury.io/rb/activeadmin_dynamic_fields.svg)](https://badge.fury.io/rb/activeadmin_dynamic_fields)
+# ActiveAdmin Dynamic Fields [![Gem Version](https://badge.fury.io/rb/activeadmin_dynamic_fields.svg)](https://badge.fury.io/rb/activeadmin_dynamic_fields) [![CircleCI](https://circleci.com/gh/blocknotes/activeadmin_dynamic_fields.svg?style=svg)](https://circleci.com/gh/blocknotes/activeadmin_dynamic_fields)
 
 An Active Admin plugin to add dynamic behaviors to fields.
 
