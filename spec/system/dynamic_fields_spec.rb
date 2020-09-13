@@ -35,7 +35,9 @@ RSpec.describe 'Dynamic fields', type: :system do
     it 'changes the value of target when the source element is blank' do
       visit "/admin/posts/#{post.id}/edit"
 
-      expect(page).to have_css('#post_description[data-if="blank"][data-action="setValue no title"][data-target="#post_category"]')
+      expect(page).to have_css(
+        '#post_description[data-if="blank"][data-action="setValue no title"][data-target="#post_category"]'
+      )
       expect(find('#post_category').value).to eq 'no title'
       find('#post_category').set('...')
       find('#post_description').set('...')
