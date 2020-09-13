@@ -67,8 +67,8 @@ end
 `f.input :title, input_html: { 'data-function': 'title_empty', 'data-then': 'slide', 'data-target': '#article_description_input' }`
 
 ```js
-function title_empty( el ) {
-  return ( $('#article_title').val().trim() === '' );
+function title_empty(el) {
+  return ($('#article_title').val().trim() === '');
 }
 ```
 
@@ -77,10 +77,10 @@ function title_empty( el ) {
 `f.input :published, input_html: { data: { if: 'checked', then: 'callback set_title', args: '["Unpublished !"]' } }`
 
 ```js
-function set_title( args ) {
-  if( $('#article_title').val().trim() === '' ) {
-    $('#article_title').val( args[0] );
-    $('#article_title').trigger( 'change' );
+function set_title(args) {
+  if($('#article_title').val().trim() === '') {
+    $('#article_title').val(args[0]);
+    $('#article_title').trigger('change');
   }
 }
 ```
@@ -90,10 +90,10 @@ function set_title( args ) {
 `f2.input :category, as: :select, collection: [ [ 'Cat 1', 'cat1' ], [ 'Cat 2', 'cat2' ], [ 'Cat 3', 'cat3' ] ], input_html: { 'data-function': 'on_change_category' }`
 
 ```js
-function on_change_category( el ) {
-  var target = el.closest( 'fieldset' ).find( '.pub' );
-  target.prop( 'checked', ( el.val() == 'cat2' ) );
-  target.trigger( 'change' );
+function on_change_category(el) {
+  var target = el.closest('fieldset').find('.pub');
+  target.prop('checked', (el.val() == 'cat2');
+  target.trigger('change');
 }
 ```
 
