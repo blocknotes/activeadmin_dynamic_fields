@@ -34,7 +34,7 @@
 
   // Prepare a field
   function dfSetupField(el) {
-    let action = el.data('action');
+    let action = el.data('then') || el.data('action');
     let target, args = {};
 
     args.if = el.data('if');

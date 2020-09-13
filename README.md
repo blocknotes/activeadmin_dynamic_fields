@@ -3,7 +3,6 @@
 An Active Admin plugin to add dynamic behaviors to fields.
 
 Features:
-
 - set conditional checks on fields
 - trigger some actions on other fields
 - inline field editing
@@ -12,16 +11,13 @@ Features:
 The easiest way to show how this plugin works is looking the examples [below](#examples).
 
 ## Install
-
 - Add to your Gemfile: `gem 'activeadmin_dynamic_fields'`
 - Execute bundle
 - Add at the end of your ActiveAdmin javascripts (_app/assets/javascripts/active_admin.js_):
 `//= require activeadmin/dynamic_fields`
 
 ## Options
-
 Options are passed to fields using *input_html* parameter as *data* attributes:
-
 - **data-if**: check a condition, values:
   + **checked**: check if a checkbox is checked
   + **not_checked**: check if a checkbox is not checked
@@ -32,7 +28,7 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
 - **data-not**: check if a field hasn't a specific value
 - **data-target**: target css selector (from parent fieldset, look for the closest match)
 - **data-gtarget**: target css selector globally
-- **data-action**: the action to trigger, values:
+- **data-then**: the action to trigger (alias **data-action**), values:
   + **hide**: hides elements
   + **slide**: hides elements (using sliding)
   + **fade**: hides elements (using fading)
@@ -45,13 +41,12 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
 ## Examples
 
 ### Dynamic fields examples
-
 - A checkbox that hides other fields if is checked (ex. model *Article*):
 
 ```rb
 form do |f|
   f.inputs 'Article' do
-    f.input :published, input_html: { data: { if: 'checked', action: 'hide', target: '.grp1' } }
+    f.input :published, input_html: { data: { if: 'checked', then: 'hide', target: '.grp1' } }
     f.input :online_date, wrapper_html: { class: 'grp1' }
     f.input :draft_notes, wrapper_html: { class: 'grp1' }
   end
@@ -61,15 +56,15 @@ end
 
 - Add 3 classes (*first*, *second*, *third*) if a checkbox is not checked:
 
-`f.input :published, input_html: { data: { if: 'not_checked', action: 'addClass first second third', target: '.grp1' } }`
+`f.input :published, input_html: { data: { if: 'not_checked', then: 'addClass first second third', target: '.grp1' } }`
 
 - Set another field value if a string field is blank:
 
-`f.input :title, input_html: { data: { if: 'blank', action: 'setValue 10', target: '#article_position' } }`
+`f.input :title, input_html: { data: { if: 'blank', then: 'setValue 10', target: '#article_position' } }`
 
 - Use a custom function for conditional check (*title_not_empty()* must be available on global scope) (with alternative syntax for data attributes):
 
-`f.input :title, input_html: { 'data-function': 'title_empty', 'data-action': 'slide', 'data-target': '#article_description_input' }`
+`f.input :title, input_html: { 'data-function': 'title_empty', 'data-then': 'slide', 'data-target': '#article_description_input' }`
 
 ```js
 function title_empty( el ) {
@@ -79,7 +74,7 @@ function title_empty( el ) {
 
 - Call a callback function as action:
 
-`f.input :published, input_html: { data: { if: 'checked', action: 'callback set_title', args: '["Unpublished !"]' } }`
+`f.input :published, input_html: { data: { if: 'checked', then: 'callback set_title', args: '["Unpublished !"]' } }`
 
 ```js
 function set_title( args ) {
@@ -103,7 +98,6 @@ function on_change_category( el ) {
 ```
 
 ### Inline editing examples
-
 - Prepare a custom member action to save data, an *update* helper function is available (third parameter is optional, allow to filter using strong parameters):
 
 ```rb
@@ -141,7 +135,6 @@ end
 ```
 
 ### Dialog example
-
 Example with 2 models: *Author* and *Article*
 
 Prepare the content dialog - in Active Admin Author config:
@@ -185,15 +178,13 @@ end
 The link url is loaded via AJAX before opening the dialog.
 
 ## Do you like it? Star it!
-
 If you use this component just star it. A developer is more motivated to improve a project when there is some interest.
 
 Take a look at [other ActiveAdmin components](https://github.com/blocknotes?utf8=✓&tab=repositories&q=activeadmin&type=source) that I made if you are curious.
 
 ## Contributors
-
 - [Mattia Roccoberton](http://blocknot.es): author
+- The good guys that opened issues and pull requests from time to time
 
 ## License
-
-[MIT](LICENSE.txt)
+The gem is available as open-source under the terms of the [MIT](LICENSE.txt).

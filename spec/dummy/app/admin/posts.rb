@@ -41,9 +41,9 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
     f.inputs 'Post' do
       f.input :author
       f.input :title
-      f.input :description, input_html: { data: { if: 'blank', action: 'setValue no title', target: '#post_category' } }
+      f.input :description, input_html: { data: { if: 'blank', then: 'setValue no title', target: '#post_category' } }
       f.input :category
-      f.input :published, input_html: { data: { if: 'not_checked', action: 'hide', target: '.group1' } }
+      f.input :published, input_html: { data: { if: 'not_checked', then: 'hide', target: '.group1' } }
       f.input :dt, wrapper_html: { class: 'group1' }
       f.input :position, wrapper_html: { class: 'group1' }
     end

@@ -17,7 +17,7 @@ RSpec.describe 'Dynamic fields', type: :system do
     it 'toggles the .group1 elements when clicking on the checkbox' do
       visit "/admin/posts/#{post.id}/edit"
 
-      expect(page).to have_css('#post_published[data-if="not_checked"][data-action="hide"][data-target=".group1"]')
+      expect(page).to have_css('#post_published[data-if="not_checked"][data-then="hide"][data-target=".group1"]')
 
       expect(find('#post_published')).not_to be_checked
       expect(page).to have_css('#post_dt_input', visible: :hidden)
@@ -36,7 +36,7 @@ RSpec.describe 'Dynamic fields', type: :system do
       visit "/admin/posts/#{post.id}/edit"
 
       expect(page).to have_css(
-        '#post_description[data-if="blank"][data-action="setValue no title"][data-target="#post_category"]'
+        '#post_description[data-if="blank"][data-then="setValue no title"][data-target="#post_category"]'
       )
       expect(find('#post_category').value).to eq 'no title'
       find('#post_category').set('...')
