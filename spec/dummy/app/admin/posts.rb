@@ -38,14 +38,112 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
   end
 
   form do |f|
+    def add_field(form, name, type, data, override_options = {})
+      options = { as: type, input_html: { data: data }, hint: data.inspect }
+      options.merge! override_options
+      form.input name, options
+    end
+
     f.inputs 'Post' do
       f.input :author
       f.input :title
-      f.input :description, input_html: { data: { if: 'blank', then: 'setValue no title', target: '#post_category' } }
-      f.input :category
-      f.input :published, input_html: { data: { if: 'not_checked', then: 'hide', target: '.group1' } }
-      f.input :dt, wrapper_html: { class: 'group1' }
-      f.input :position, wrapper_html: { class: 'group1' }
+
+      f.input :data_test, as: :string
+
+      # --- if
+      df111 = { if: 'checked', then: 'addClass red', target: '#post_data_field_111_input label' }
+      add_field(f, :data_field_111, :boolean, df111)
+
+      df121 = { if: 'not_checked', then: 'addClass red', target: '#post_data_field_121_input label' }
+      add_field(f, :data_field_121, :boolean, df121)
+
+      df131 = { if: 'blank', then: 'addClass red', target: '#post_data_field_131_input label' }
+      add_field(f, :data_field_131, :string, df131)
+
+      df132 = { if: 'blank', then: 'addClass red', target: '#post_data_field_132_input label' }
+      add_field(f, :data_field_132, :text, df132)
+
+      df141 = { if: 'not_blank', then: 'addClass red', target: '#post_data_field_141_input label' }
+      add_field(f, :data_field_141, :string, df141)
+
+      df142 = { if: 'not_blank', then: 'addClass red', target: '#post_data_field_142_input label' }
+      add_field(f, :data_field_142, :text, df142)
+
+      df151 = { if: 'changed', then: 'addClass red', target: '#post_data_field_151_input label' }
+      add_field(f, :data_field_151, :boolean, df151)
+
+      df152 = { if: 'changed', then: 'addClass red', target: '#post_data_field_152_input label' }
+      add_field(f, :data_field_152, :string, df152)
+
+      df153 = { if: 'changed', then: 'addClass red', target: '#post_data_field_153_input label' }
+      add_field(f, :data_field_153, :text, df153)
+
+      # --- eq
+      df161 = { eq: '161', then: 'addClass red', target: '#post_data_field_161_input label' }
+      add_field(f, :data_field_161, :string, df161)
+
+      df162 = { eq: '162', then: 'addClass red', target: '#post_data_field_162_input label' }
+      add_field(f, :data_field_162, :select, df162, collection: [161, 162, 163])
+
+      df163 = { eq: '163', then: 'addClass red', target: '#post_data_field_163_input label' }
+      add_field(f, :data_field_163, :text, df163)
+
+      # --- not
+      df181 = { not: '181', then: 'addClass red', target: '#post_data_field_181_input label' }
+      add_field(f, :data_field_181, :string, df181)
+
+      df182 = { not: '182', then: 'addClass red', target: '#post_data_field_182_input label' }
+      add_field(f, :data_field_182, :select, df182, collection: [181, 182, 183])
+
+      df183 = { not: '183', then: 'addClass red', target: '#post_data_field_183_input label' }
+      add_field(f, :data_field_183, :text, df183)
+
+      # --- function
+      df201 = { function: 'test_fun', then: 'addClass red', target: '#post_data_field_201_input label' }
+      add_field(f, :data_field_201, :string, df201)
+
+      df202 = { function: 'missing_fun', then: 'addClass red', target: '#post_data_field_202_input label' }
+      add_field(f, :data_field_202, :string, df202)
+
+      df203 = { function: 'test_fun2' }
+      add_field(f, :data_field_203, :boolean, df203)
+
+      # --- addClass
+      df211 = { if: 'checked', then: 'addClass red', target: '#post_data_field_211_input label' }
+      add_field(f, :data_field_211, :boolean, df211)
+
+      # --- callback
+      df221 = { if: 'checked', then: 'callback test_callback', args: 'test_callback_arg' }
+      add_field(f, :data_field_221, :boolean, df221)
+
+      df222 = { if: 'checked', then: 'callback missing_callback', args: 'callback arg' }
+      add_field(f, :data_field_222, :boolean, df222)
+
+      # --- setValue
+      df231 = { if: 'checked', then: 'setValue data test', target: '#post_data_test' }
+      add_field(f, :data_field_231, :boolean, df231)
+
+      # --- hide
+      df241 = { if: 'checked', then: 'hide', target: '#post_data_field_241_input .inline-hints' }
+      add_field(f, :data_field_241, :boolean, df241)
+
+      # --- fade
+      df251 = { if: 'checked', then: 'fade', target: '#post_data_field_251_input .inline-hints' }
+      add_field(f, :data_field_251, :boolean, df251)
+
+      # --- slide
+      df261 = { if: 'checked', then: 'slide', target: '#post_data_field_261_input .inline-hints' }
+      add_field(f, :data_field_261, :boolean, df261)
+
+      # --- gtarget
+      df301 = { if: 'checked', then: 'addClass red', gtarget: 'body.active_admin' }
+      add_field(f, :data_field_301, :boolean, df301)
+
+      # This will not work - here only for testing:
+      df302 = { if: 'checked', then: 'addClass red', target: 'body.active_admin' }
+      add_field(f, :data_field_302, :boolean, df302)
+
+      # ---
     end
 
     f.inputs 'Tags' do

@@ -53,7 +53,8 @@ ActiveAdmin.register Author do
               hint: (object.avatar.attached? ? "Current: #{object.avatar.filename}" : nil)
     end
     f.has_many :profile, allow_destroy: true do |ff|
-      ff.input :description
+      dyn_description = { if: 'not_blank', then: 'addClass red', gtarget: 'body' }
+      ff.input :description, input_html: { data: dyn_description }
     end
     f.actions
   end
