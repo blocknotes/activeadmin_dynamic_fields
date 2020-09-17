@@ -1,10 +1,10 @@
 # ActiveAdmin Dynamic Fields [![Gem Version](https://badge.fury.io/rb/activeadmin_dynamic_fields.svg)](https://badge.fury.io/rb/activeadmin_dynamic_fields) [![CircleCI](https://circleci.com/gh/blocknotes/activeadmin_dynamic_fields.svg?style=svg)](https://circleci.com/gh/blocknotes/activeadmin_dynamic_fields)
 
-An Active Admin plugin to add dynamic behaviors to fields.
+An Active Admin plugin to add dynamic behaviors to some fields.
 
 Features:
 - set conditional checks on fields
-- trigger some actions on other fields
+- trigger actions on target elements
 - inline field editing
 - create links to load some content in a dialog
 
@@ -14,7 +14,10 @@ The easiest way to show how this plugin works is looking the examples [below](#e
 - Add to your Gemfile: `gem 'activeadmin_dynamic_fields'`
 - Execute bundle
 - Add at the end of your ActiveAdmin javascripts (_app/assets/javascripts/active_admin.js_):
-`//= require activeadmin/dynamic_fields`
+
+```js
+//= require activeadmin/dynamic_fields
+```
 
 ## Options
 Options are passed to fields using *input_html* parameter as *data* attributes:
@@ -37,6 +40,8 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
   + **callback**: call a function
 - **data-function**: check the return value of a custom function
 - **data-arg**: argument passed to the custom set function (as array of strings)
+
+A check condition or a custom check function are required. A trigger action is required too, unless you are using a custom function (in that case it is optional).
 
 ## Examples
 
