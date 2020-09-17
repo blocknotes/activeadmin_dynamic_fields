@@ -27,6 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec-rails', '~> 4.0.1'
   spec.add_development_dependency 'rubocop', '~> 0.90.0'
   spec.add_development_dependency 'selenium-webdriver', '~> 3.142.7'
-  spec.add_development_dependency 'simplecov', '~> 0.19.0'
   spec.add_development_dependency 'sqlite3', '~> 1.4.2'
 end
