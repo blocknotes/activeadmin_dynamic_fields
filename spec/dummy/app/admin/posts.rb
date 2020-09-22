@@ -143,7 +143,9 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
       df302 = { if: 'checked', then: 'addClass red', target: 'body.active_admin' }
       add_field(f, :data_field_302, :boolean, df302)
 
-      # ---
+      # --- else
+      df321 = { if: 'checked', then: 'addClass red', target: '#post_data_field_321_input label', else: 'addClass green' }
+      add_field(f, :data_field_321, :boolean, df321)
     end
 
     f.inputs 'Tags' do

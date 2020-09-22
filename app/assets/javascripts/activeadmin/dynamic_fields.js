@@ -12,7 +12,11 @@
     },
     fade: el => el.fadeOut(),
     hide: el => el.hide(),
-    setValue: (el, value) => dfSetValue(el, value),
+    setValue: (el, value) => {
+      if (el.attr('type') == 'checkbox') el.prop('checked', value == '1')
+      else el.val(value)
+      el.trigger('change')
+    },
     slide: el => el.slideUp()
   }
 
@@ -33,58 +37,65 @@
     slide: el => el.slideDown()
   }
 
-  function dfEvalCondition(el) {
-    let condition = CONDITIONS[el.data('if')]
-    let condition_arg
+  class Field {
+    constructor(el) {
+      const action = el.data('then') || el.data('action') || ''
+      const action_name = action.split(' ', 1)[0]
+      const else_action = el.data('else') || ''
+      const else_action_name = else_action.split(' ', 1)[0]
 
-    if(!condition && el.data('eq')) {
-      condition = CONDITIONS['eq']
-      condition_arg = el.data('eq')
+      this.el = el
+      this.action = ACTIONS[action_name]
+      this.action_arg = action.substring(action.indexOf(' ') + 1)
+      this.reverse_action = REVERSE_ACTIONS[action_name]
+      this.else_action = ACTIONS[else_action_name]
+      this.else_action_arg = else_action.substring(else_action.indexOf(' ') + 1)
+      this.else_reverse_action = REVERSE_ACTIONS[else_action_name]
+      this.condition = CONDITIONS[el.data('if')]
+      if (!this.condition && el.data('eq')) {
+        [this.condition, this.condition_arg] = [CONDITIONS['eq'], el.data('eq')]
+      }
+      if (!this.condition && el.data('not')) {
+        [this.condition, this.condition_arg] = [CONDITIONS['not'], el.data('not')]
+      }
+      this.custom_function = el.data('function')
+      if (!this.condition && this.custom_function) {
+        this.condition = window[this.custom_function]
+        if (!this.condition) {
+          el.attr('data-df-errors', 'custom function not found')
+          console.warn(`activeadmin_dynamic_fields custom function not found: ${this.custom_function}`)
+        }
+      }
+
+      // closest find for has many associations
+      if (el.data('target')) this.target = el.closest('fieldset').find(el.data('target'))
+      else if (el.data('gtarget')) this.target = $(el.data('gtarget'))
+      if (action_name == 'callback') this.target = el
     }
-    if(!condition && el.data('not')) {
-      condition = CONDITIONS['not']
-      condition_arg = el.data('not')
-    }
-    if(!condition && el.data('function')) {
-      condition = window[el.data('function')]
-      if(!condition) {
-        el.attr('data-df-errors', 'custom function not found')
-        console.warn(`activeadmin_dynamic_fields custom function not found: ${el.data('function')}`)
+
+    apply(el) {
+      if (this.condition(el, this.condition_arg)) {
+        if (this.else_reverse_action) this.else_reverse_action(this.target, this.else_action_arg)
+        this.action(this.target, this.action_arg)
+      }
+      else {
+        if (this.reverse_action) this.reverse_action(this.target, this.action_arg)
+        if (this.else_action) this.else_action(this.target, this.else_action_arg)
       }
     }
 
-    return [condition, condition_arg]
-  }
+    is_valid() {
+      if (!this.condition) return false
+      if (!this.action && !this.custom_function) return false
 
-  function dfInitField(el) {
-    const [condition, condition_arg] = dfEvalCondition(el)
-    const action_name = (el.data('then') || el.data('action') || '').substr(0, 8)
-    const action = ACTIONS[action_name]
-    const arg = (el.data('then') || el.data('action') || '').substr(9)
-    const reverse_action = REVERSE_ACTIONS[action_name]
-    if (typeof condition === 'undefined') return
-    if (typeof action === 'undefined' && !el.data('function')) return
+      return true
+    }
 
-    // closest find for has many associations
-    let target
-    if (el.data('target')) target = el.closest('fieldset').find(el.data('target'))
-    else if (el.data('gtarget')) target = $(el.data('gtarget'))
-    if (action_name == 'callback') target = el
-
-    if (condition(el, condition_arg) && el.data('if') != 'changed') action(target, arg)
-    else if (reverse_action) reverse_action(target, arg)
-
-    el.on('change', () => {
-      if (condition(el, condition_arg)) action(target, arg)
-      else if (reverse_action) reverse_action(target, arg)
-    })
-  }
-
-  // Set the value of an element
-  function dfSetValue(el, val) {
-    if (el.attr('type') == 'checkbox') el.prop('checked', val == '1')
-    else el.val(val)
-    el.trigger('change')
+    setup() {
+      if (!this.is_valid()) return
+      if (this.el.data('if') != 'changed') this.apply(this.el)
+      this.el.on('change', () => this.apply(this.el))  
+    }
   }
 
   // Inline update - must be called binded on the editing element
@@ -144,14 +155,14 @@
     // Setup dynamic fields
     const selectors = '.active_admin .input [data-if], .active_admin .input [data-eq], .active_admin .input [data-not], .active_admin .input [data-function]'
     $(selectors).each(function () {
-      dfInitField($(this))
+      new Field($(this)).setup()
     })
 
     // Setup dynamic fields for associations
     $('.active_admin .has_many_container').on('has_many_add:after', () => {
       $(selectors).each(function () {
-        dfInitField($(this))
-      })  
+        new Field($(this)).setup()
+      })
     })
 
     // Set dialog icon link

@@ -20,7 +20,9 @@ The easiest way to show how this plugin works is looking the examples [below](#e
 ```
 
 ## Options
-Options are passed to fields using *input_html* parameter as *data* attributes:
+Options are passed to fields using *input_html* parameter as *data* attributes.
+
+Conditions:
 - **data-if**: check a condition, values:
   + **checked**: check if a checkbox is checked
   + **not_checked**: check if a checkbox is not checked
@@ -29,17 +31,22 @@ Options are passed to fields using *input_html* parameter as *data* attributes:
   + **changed**: check if the value of an input is changed (dirty)
 - **data-eq**: check if a field has a specific value
 - **data-not**: check if a field hasn't a specific value
-- **data-target**: target css selector (from parent fieldset, look for the closest match)
-- **data-gtarget**: target css selector globally
-- **data-then**: the action to trigger (alias **data-action**), values:
+- **data-function**: check the return value of a custom function
+
+Actions:
+- **data-then**: action to trigger (alias **data-action**), values:
   + **hide**: hides elements
   + **slide**: hides elements (using sliding)
   + **fade**: hides elements (using fading)
   + **addClass**: adds classes
   + **setValue**: set a value
-  + **callback**: call a function
-- **data-function**: check the return value of a custom function
-- **data-arg**: argument passed to the custom set function (as array of strings)
+  + **callback**: call a function (with arguments: **data-args**)
+- **data-else**: action to trigger when the condition check is not true
+- **data-args**: arguments passed to the callback function
+
+Targets:
+- **data-target**: target css selector (from parent fieldset, look for the closest match)
+- **data-gtarget**: target css selector globally
 
 A check condition or a custom check function are required. A trigger action is required too, unless you are using a custom function (in that case it is optional).
 
@@ -59,17 +66,25 @@ form do |f|
 end
 ```
 
-- Add 3 classes (*first*, *second*, *third*) if a checkbox is not checked:
+- Add 3 classes (*first*, *second*, *third*) if a checkbox is not checked, else add "forth" class:
 
-`f.input :published, input_html: { data: { if: 'not_checked', then: 'addClass first second third', target: '.grp1' } }`
+```rb
+data = { if: 'not_checked', then: 'addClass first second third', target: '.grp1', else: 'addClass forth' }
+f.input :published, input_html: { data: data }
+```
 
 - Set another field value if a string field is blank:
 
-`f.input :title, input_html: { data: { if: 'blank', then: 'setValue 10', target: '#article_position' } }`
+```rb
+f.input :title, input_html: { data: { if: 'blank', then: 'setValue 10', target: '#article_position' } }
+```
 
 - Use a custom function for conditional check (*title_not_empty()* must be available on global scope) (with alternative syntax for data attributes):
 
-`f.input :title, input_html: { 'data-function': 'title_empty', 'data-then': 'slide', 'data-target': '#article_description_input' }`
+```rb
+attrs = { 'data-function': 'title_empty', 'data-then': 'slide', 'data-target': '#article_description_input' }
+f.input :title, input_html: attrs
+```
 
 ```js
 function title_empty(el) {
@@ -79,7 +94,10 @@ function title_empty(el) {
 
 - Call a callback function as action:
 
-`f.input :published, input_html: { data: { if: 'checked', then: 'callback set_title', args: '["Unpublished !"]' } }`
+```rb
+data = { if: 'checked', then: 'callback set_title', args: '["Unpublished !"]' }
+f.input :published, input_html: { data: data }
+```
 
 ```js
 function set_title(args) {
@@ -92,7 +110,10 @@ function set_title(args) {
 
 - Custom function without action:
 
-`f2.input :category, as: :select, collection: [ [ 'Cat 1', 'cat1' ], [ 'Cat 2', 'cat2' ], [ 'Cat 3', 'cat3' ] ], input_html: { 'data-function': 'on_change_category' }`
+```rb
+collection = [['Cat 1', 'cat1'], ['Cat 2', 'cat2'], ['Cat 3', 'cat3']]
+f2.input :category, as: :select, collection: collection, input_html: { 'data-function': 'on_change_category' }
+```
 
 ```js
 function on_change_category(el) {
