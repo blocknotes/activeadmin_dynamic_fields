@@ -12,7 +12,11 @@
     },
     fade: el => el.fadeOut(),
     hide: el => el.hide(),
-    setValue: (el, value) => dfSetValue(el, value),
+    setValue: (el, value) => {
+      if (el.attr('type') == 'checkbox') el.prop('checked', value == '1')
+      else el.val(value)
+      el.trigger('change')
+    },
     slide: el => el.slideUp()
   }
 
@@ -35,13 +39,18 @@
 
   class Field {
     constructor(el) {
-      const action = (el.data('then') || el.data('action') || '')
+      const action = el.data('then') || el.data('action') || ''
       const action_name = action.split(' ', 1)[0]
+      const else_action = el.data('else') || ''
+      const else_action_name = else_action.split(' ', 1)[0]
 
       this.el = el
       this.action = ACTIONS[action_name]
       this.action_arg = action.substring(action.indexOf(' ') + 1)
       this.reverse_action = REVERSE_ACTIONS[action_name]
+      this.else_action = ACTIONS[else_action_name]
+      this.else_action_arg = else_action.substring(else_action.indexOf(' ') + 1)
+      this.else_reverse_action = REVERSE_ACTIONS[else_action_name]
       this.condition = CONDITIONS[el.data('if')]
       if (!this.condition && el.data('eq')) {
         [this.condition, this.condition_arg] = [CONDITIONS['eq'], el.data('eq')]
@@ -66,10 +75,12 @@
 
     apply(el) {
       if (this.condition(el, this.condition_arg)) {
+        if (this.else_reverse_action) this.else_reverse_action(this.target, this.else_action_arg)
         this.action(this.target, this.action_arg)
       }
       else {
         if (this.reverse_action) this.reverse_action(this.target, this.action_arg)
+        if (this.else_action) this.else_action(this.target, this.else_action_arg)
       }
     }
 
@@ -85,13 +96,6 @@
       if (this.el.data('if') != 'changed') this.apply(this.el)
       this.el.on('change', () => this.apply(this.el))  
     }
-  }
-
-  // Set the value of an element
-  function dfSetValue(el, val) {
-    if (el.attr('type') == 'checkbox') el.prop('checked', val == '1')
-    else el.val(val)
-    el.trigger('change')
   }
 
   // Inline update - must be called binded on the editing element

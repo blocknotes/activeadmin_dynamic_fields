@@ -143,6 +143,13 @@ RSpec.describe 'Dynamic fields', type: :system do
 
       find('#post_data_field_302').click # checks that using simply "target" will not work
       expect(page).not_to have_css('body.active_admin.red')
+
+      # --- else
+      expect(page).not_to have_css('#post_data_field_321_input label.red')
+      expect(page).to have_css('#post_data_field_321_input label.green')
+      find('#post_data_field_321').click
+      expect(page).to have_css('#post_data_field_321_input label.red')
+      expect(page).not_to have_css('#post_data_field_321_input label.green')
     end
   end
 
