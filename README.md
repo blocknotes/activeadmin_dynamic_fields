@@ -24,23 +24,24 @@ Options are passed to fields using *input_html* parameter as *data* attributes.
 
 Conditions:
 - **data-if**: check a condition, values:
-  + **checked**: check if a checkbox is checked
+  + **checked**: check if a checkbox is checked (ex. `"data-if": "checked"`)
   + **not_checked**: check if a checkbox is not checked
   + **blank**: check if a field is blank
   + **not_blank**: check if a field is not blank
   + **changed**: check if the value of an input is changed (dirty)
-- **data-eq**: check if a field has a specific value
-- **data-not**: check if a field hasn't a specific value
-- **data-function**: check the return value of a custom function
+- **data-eq**: check if a field has a specific value (ex. `"data-eq": "42"`)
+- **data-not**: check if a field has not a specific value
+- **data-function**: check the return value of a custom function (ex. `"data-function": "my_check"`)
 
 Actions:
 - **data-then**: action to trigger (alias **data-action**), values:
-  + **hide**: hides elements
+  + **hide**: hides elements (ex. `"data-then": "hide", "data-target": ".errors"`)
   + **slide**: hides elements (using sliding)
   + **fade**: hides elements (using fading)
-  + **addClass**: adds classes
-  + **setValue**: set a value
-  + **callback**: call a function (with arguments: **data-args**)
+  + **addClass**: adds classes (ex. `"data-then": "addClass red"`)
+  + **setText**: set the text of an element (ex. `"data-then": "setText A sample text"`)
+  + **setValue**: set the value of an input element (ex. `"data-then": "setValue A sample value"`)
+  + **callback**: call a function (with arguments: **data-args**) (ex. `"data-then": "callback a_fun"`)
 - **data-else**: action to trigger when the condition check is not true
 - **data-args**: arguments passed to the callback function
 
