@@ -135,6 +135,10 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
       df261 = { if: 'checked', then: 'slide', target: '#post_data_field_261_input .inline-hints' }
       add_field(f, :data_field_261, :boolean, df261)
 
+      # --- setText
+      df271 = { if: 'checked', then: 'setText data test', target: '#post_data_field_271_input .inline-hints' }
+      add_field(f, :data_field_271, :boolean, df271)
+
       # --- gtarget
       df301 = { if: 'checked', then: 'addClass red', gtarget: 'body.active_admin' }
       add_field(f, :data_field_301, :boolean, df301)

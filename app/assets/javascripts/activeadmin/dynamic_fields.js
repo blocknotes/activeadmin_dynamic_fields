@@ -12,6 +12,7 @@
     },
     fade: el => el.fadeOut(),
     hide: el => el.hide(),
+    setText: (el, text) => el.text(text),
     setValue: (el, value) => {
       if (el.attr('type') == 'checkbox') el.prop('checked', value == '1')
       else el.val(value)

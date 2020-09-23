@@ -134,6 +134,11 @@ RSpec.describe 'Dynamic fields', type: :system do
       find('#post_data_field_261').click
       expect(page).to have_css('#post_data_field_261_input .inline-hints', visible: :hidden)
 
+      # --- setText
+      expect(find('#post_data_field_271_input .inline-hints').text).not_to eq 'data test'
+      find('#post_data_field_271').click
+      expect(find('#post_data_field_271_input .inline-hints').text).to eq 'data test'
+
       # --- gtarget
       expect(page).not_to have_css('body.active_admin.red')
       find('#post_data_field_301').click
