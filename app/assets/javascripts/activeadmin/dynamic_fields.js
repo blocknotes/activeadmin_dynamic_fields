@@ -3,6 +3,13 @@
 
   const ACTIONS = {
     addClass: (el, name) => el.addClass(name),
+    addStyle: (el, extra_style) => {
+      let style = (el.attr('style') || '').trim()
+      if (!style.includes(extra_style)) {
+        if (style) style = style.replace(/;$/, '') + '; ' // ensure style ends with ;
+        el.attr('style', `${style}${extra_style}`)
+      }
+    },
     callback: (el, name) => {
       if (window[name]) window[name](el.data('args'))
       else {
@@ -33,6 +40,9 @@
 
   const REVERSE_ACTIONS = {
     addClass: (el, name) => el.removeClass(name),
+    addStyle: (el, extra_style) => {
+      if(el.attr('style')) el.attr('style', el.attr('style').replace(extra_style, ''))
+    },
     fade: el => el.fadeIn(),
     hide: el => el.show(),
     slide: el => el.slideDown()

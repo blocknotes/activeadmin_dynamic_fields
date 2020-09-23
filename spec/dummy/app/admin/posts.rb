@@ -38,8 +38,8 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
   end
 
   form do |f|
-    def add_field(form, name, type, data, override_options = {})
-      options = { as: type, input_html: { data: data }, hint: data.inspect }
+    def add_field(form, name, type, data, override_options = {}, extra_attrs = {})
+      options = { as: type, input_html: { data: data }.merge(extra_attrs), hint: data.inspect }
       options.merge! override_options
       form.input name, options
     end
@@ -138,6 +138,10 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
       # --- setText
       df271 = { if: 'checked', then: 'setText data test', target: '#post_data_field_271_input .inline-hints' }
       add_field(f, :data_field_271, :boolean, df271)
+
+      # --- addStyle
+      df281 = { if: 'checked', then: 'addStyle font-size: 10px; color: red', target: '#post_data_field_281' }
+      add_field(f, :data_field_281, :boolean, df281, {}, { 'style': 'margin-right: 20px' })
 
       # --- gtarget
       df301 = { if: 'checked', then: 'addClass red', gtarget: 'body.active_admin' }

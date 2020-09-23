@@ -39,6 +39,7 @@ Actions:
   + **slide**: hides elements (using sliding)
   + **fade**: hides elements (using fading)
   + **addClass**: adds classes (ex. `"data-then": "addClass red"`)
+  + **addStyle**: adds some styles (ex. `"data-then": "addStyle color: #fb1; font-size: 12px"`)
   + **setText**: set the text of an element (ex. `"data-then": "setText A sample text"`)
   + **setValue**: set the value of an input element (ex. `"data-then": "setValue A sample value"`)
   + **callback**: call a function (with arguments: **data-args**) (ex. `"data-then": "callback a_fun"`)

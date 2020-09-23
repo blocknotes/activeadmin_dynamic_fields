@@ -139,6 +139,13 @@ RSpec.describe 'Dynamic fields', type: :system do
       find('#post_data_field_271').click
       expect(find('#post_data_field_271_input .inline-hints').text).to eq 'data test'
 
+      # --- addStyle
+      expect(find('#post_data_field_281')[:style]).to eq 'margin-right: 20px;'
+      find('#post_data_field_281').click
+      expect(find('#post_data_field_281')[:style]).to eq 'margin-right: 20px; font-size: 10px; color: red;'
+      find('#post_data_field_281').click
+      expect(find('#post_data_field_281')[:style]).to eq 'margin-right: 20px;'
+
       # --- gtarget
       expect(page).not_to have_css('body.active_admin.red')
       find('#post_data_field_301').click
