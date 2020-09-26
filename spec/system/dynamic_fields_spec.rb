@@ -73,19 +73,31 @@ RSpec.describe 'Dynamic fields', type: :system do
       expect(page).to have_css('#post_data_field_163_input label.red')
 
       # --- not
-      expect(page).to have_css('#post_data_field_181_input label.red')
-      fill_in('post_data_field_181', with: '181')
+      expect(page).to have_css('#post_data_field_171_input label.red')
+      fill_in('post_data_field_171', with: '171')
       find('body').click
+      expect(page).not_to have_css('#post_data_field_171_input label.red')
+
+      expect(page).to have_css('#post_data_field_172_input label.red')
+      select('172', from: 'post_data_field_172')
+      expect(page).not_to have_css('#post_data_field_172_input label.red')
+
+      expect(page).to have_css('#post_data_field_173_input label.red')
+      fill_in('post_data_field_173', with: '173')
+      find('body').click
+      expect(page).not_to have_css('#post_data_field_173_input label.red')
+
+      # --- match
       expect(page).not_to have_css('#post_data_field_181_input label.red')
-
-      expect(page).to have_css('#post_data_field_182_input label.red')
-      select('182', from: 'post_data_field_182')
-      expect(page).not_to have_css('#post_data_field_182_input label.red')
-
-      expect(page).to have_css('#post_data_field_183_input label.red')
-      fill_in('post_data_field_183', with: '183')
+      fill_in('post_data_field_181', with: ' Something new ...')
       find('body').click
-      expect(page).not_to have_css('#post_data_field_183_input label.red')
+      expect(page).to have_css('#post_data_field_181_input label.red')
+
+      # --- mismatch
+      expect(page).to have_css('#post_data_field_191_input label.red')
+      fill_in('post_data_field_191', with: '1234')
+      find('body').click
+      expect(page).not_to have_css('#post_data_field_191_input label.red')
 
       # --- function
       expect(page).not_to have_css('#post_data_field_201_input label.red')

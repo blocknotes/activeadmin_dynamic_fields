@@ -89,14 +89,22 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
       add_field(f, :data_field_163, :text, df163)
 
       # --- not
-      df181 = { not: '181', then: 'addClass red', target: '#post_data_field_181_input label' }
+      df171 = { not: '171', then: 'addClass red', target: '#post_data_field_171_input label' }
+      add_field(f, :data_field_171, :string, df171)
+
+      df172 = { not: '172', then: 'addClass red', target: '#post_data_field_172_input label' }
+      add_field(f, :data_field_172, :select, df172, collection: [171, 172, 173])
+
+      df173 = { not: '173', then: 'addClass red', target: '#post_data_field_173_input label' }
+      add_field(f, :data_field_173, :text, df173)
+
+      # --- match
+      df181 = { match: 'Something\s', then: 'addClass red', target: '#post_data_field_181_input label' }
       add_field(f, :data_field_181, :string, df181)
 
-      df182 = { not: '182', then: 'addClass red', target: '#post_data_field_182_input label' }
-      add_field(f, :data_field_182, :select, df182, collection: [181, 182, 183])
-
-      df183 = { not: '183', then: 'addClass red', target: '#post_data_field_183_input label' }
-      add_field(f, :data_field_183, :text, df183)
+      # --- mismatch
+      df191 = { mismatch: '^\d+$', then: 'addClass red', target: '#post_data_field_191_input label' }
+      add_field(f, :data_field_191, :string, df191)
 
       # --- function
       df201 = { function: 'test_fun', then: 'addClass red', target: '#post_data_field_201_input label' }

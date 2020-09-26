@@ -33,6 +33,8 @@
     changed: _el => true,
     checked: el => el.is(':checked'),
     eq: (el, value) => el.val() == value,
+    match: (el, regexp) => regexp.test(el.val()),
+    mismatch: (el, regexp) => !regexp.test(el.val()),
     not: (el, value) => el.val() != value,
     not_blank: el => el.val().trim(),
     not_checked: el => !el.is(':checked')
@@ -68,6 +70,12 @@
       }
       if (!this.condition && el.data('not')) {
         [this.condition, this.condition_arg] = [CONDITIONS['not'], el.data('not')]
+      }
+      if (!this.condition && el.data('match')) {
+        [this.condition, this.condition_arg] = [CONDITIONS['match'], new RegExp(el.data('match'))]
+      }
+      if (!this.condition && el.data('mismatch')) {
+        [this.condition, this.condition_arg] = [CONDITIONS['mismatch'], new RegExp(el.data('mismatch'))]
       }
       this.custom_function = el.data('function')
       if (!this.condition && this.custom_function) {
@@ -164,7 +172,7 @@
   // Init
   $(document).ready(function () {
     // Setup dynamic fields
-    const selectors = '.active_admin .input [data-if], .active_admin .input [data-eq], .active_admin .input [data-not], .active_admin .input [data-function]'
+    const selectors = '.active_admin .input [data-if], .active_admin .input [data-eq], .active_admin .input [data-not], .active_admin .input [data-match], .active_admin .input [data-mismatch], .active_admin .input [data-function]'
     $(selectors).each(function () {
       new Field($(this)).setup()
     })

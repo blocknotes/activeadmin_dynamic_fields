@@ -31,6 +31,8 @@ Conditions:
   + **changed**: check if the value of an input is changed (dirty)
 - **data-eq**: check if a field has a specific value (ex. `"data-eq": "42"`)
 - **data-not**: check if a field has not a specific value
+- **data-match**: check if a field match a regexp
+- **data-mismatch**: check if a field doesn't match a regexp (ex. `"data-mismatch": "^\d+$"`)
 - **data-function**: check the return value of a custom function (ex. `"data-function": "my_check"`)
 
 Actions:
