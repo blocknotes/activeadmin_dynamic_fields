@@ -13,6 +13,58 @@ RSpec.describe 'Dynamic fields', type: :system do
     author.destroy
   end
 
+  def apply_action(action, inverse: false)
+    case action[0]
+    when :click
+      find(action[1]).click
+    when :fill
+      fill_in(action[1], with: inverse ? '' : action[2])
+      find('body').click
+    when :select
+      select(inverse ? '' : action[2], from: action[1])
+    end
+  end
+
+  def spec_message(string)
+    RSpec.configuration.reporter.message(string)
+  end
+
+  def test_set_css(target, options = {})
+    spec_message("test set#{options[:one_way] ? '' : '/unset'} CSS on #{target} ...")
+
+    expect(page).not_to have_css(target)
+    block_given? ? yield : apply_action(options[:action])
+    expect(page).to have_css(target)
+    return if options[:one_way]
+
+    block_given? ? yield : apply_action(options[:action], inverse: true)
+    expect(page).not_to have_css(target)
+  end
+
+  def test_unset_css(target, options = {})
+    spec_message("test unset#{options[:one_way] ? '' : '/set'} CSS on #{target} ...")
+
+    expect(page).to have_css(target)
+    block_given? ? yield : apply_action(options[:action])
+    expect(page).not_to have_css(target)
+    return if options[:one_way]
+
+    block_given? ? yield : apply_action(options[:action], inverse: true)
+    expect(page).to have_css(target)
+  end
+
+  def test_change_css(target, attrs1, attrs2, options = {})
+    spec_message("test change CSS on #{target} ...")
+
+    expect(page).to have_css(target, attrs1)
+    block_given? ? yield : apply_action(options[:action])
+    expect(page).to have_css(target, attrs2)
+    return if options[:one_way]
+
+    block_given? ? yield : apply_action(options[:action], inverse: true)
+    expect(page).to have_css(target, attrs1)
+  end
+
   context 'with some dynamic fields' do
     it 'checks the conditions and actions' do
       visit "/admin/posts/#{post.id}/edit"
@@ -20,155 +72,98 @@ RSpec.describe 'Dynamic fields', type: :system do
       expect(page).to have_css('#post_data_field_111[data-if="checked"][data-then="addClass red"][data-target="#post_data_field_111_input label"]') # rubocop:disable Layout/LineLength
 
       # --- if
-      expect(page).not_to have_css('#post_data_field_111_input label.red')
-      find('#post_data_field_111').click
-      expect(page).to have_css('#post_data_field_111_input label.red')
-
-      expect(page).to have_css('#post_data_field_121_input label.red')
-      find('#post_data_field_121').click
-      expect(page).not_to have_css('#post_data_field_121_input label.red')
-
-      expect(page).to have_css('#post_data_field_132_input label.red')
-      fill_in('post_data_field_132', with: 'something')
-      find('body').click
-      expect(page).not_to have_css('#post_data_field_132_input label.red')
-
-      expect(page).not_to have_css('#post_data_field_141_input label.red')
-      fill_in('post_data_field_141', with: 'something')
-      find('body').click
-      expect(page).to have_css('#post_data_field_141_input label.red')
-
-      expect(page).not_to have_css('#post_data_field_142_input label.red')
-      fill_in('post_data_field_142', with: 'something')
-      find('body').click
-      expect(page).to have_css('#post_data_field_142_input label.red')
-
-      expect(page).not_to have_css('#post_data_field_151_input label.red')
-      find('#post_data_field_151').click
-      expect(page).to have_css('#post_data_field_151_input label.red')
-
-      expect(page).not_to have_css('#post_data_field_152_input label.red')
-      fill_in('post_data_field_152', with: 'something')
-      find('body').click
-      expect(page).to have_css('#post_data_field_152_input label.red')
-
-      expect(page).not_to have_css('#post_data_field_153_input label.red')
-      fill_in('post_data_field_153', with: 'something')
-      find('body').click
-      expect(page).to have_css('#post_data_field_153_input label.red')
+      spec_message('check data-if condition')
+      test_set_css('#post_data_field_111_input label.red', action: [:click, '#post_data_field_111'])
+      # test_unset_css('#post_data_field_112_input label.red', action: [:click, '#post_data_field_112'])
+      test_unset_css('#post_data_field_121_input label.red', action: [:click, '#post_data_field_121'])
+      test_unset_css('#post_data_field_131_input label.red', action: [:fill, 'post_data_field_131', 'something'])
+      test_unset_css('#post_data_field_132_input label.red', action: [:fill, 'post_data_field_132', 'something'])
+      test_set_css('#post_data_field_141_input label.red', action: [:fill, 'post_data_field_141', 'something'])
+      test_set_css('#post_data_field_142_input label.red', action: [:fill, 'post_data_field_142', 'something'])
+      test_set_css('#post_data_field_151_input label.red', one_way: true, action: [:click, '#post_data_field_151'])
+      action = [:fill, 'post_data_field_152', 'something']
+      test_set_css('#post_data_field_152_input label.red', one_way: true, action: action)
+      action = [:fill, 'post_data_field_153', 'something']
+      test_set_css('#post_data_field_153_input label.red', one_way: true, action: action)
 
       # --- eq
-      expect(page).not_to have_css('#post_data_field_161_input label.red')
-      fill_in('post_data_field_161', with: '161')
-      find('body').click
-      expect(page).to have_css('#post_data_field_161_input label.red')
-
-      expect(page).not_to have_css('#post_data_field_162_input label.red')
-      select('162', from: 'post_data_field_162')
-      expect(page).to have_css('#post_data_field_162_input label.red')
-
-      expect(page).not_to have_css('#post_data_field_163_input label.red')
-      fill_in('post_data_field_163', with: '163')
-      find('body').click
-      expect(page).to have_css('#post_data_field_163_input label.red')
+      spec_message('check data-eq condition')
+      test_set_css('#post_data_field_161_input label.red', action: [:fill, 'post_data_field_161', '161'])
+      test_set_css('#post_data_field_162_input label.red', action: [:select, 'post_data_field_162', '162'])
+      test_set_css('#post_data_field_163_input label.red', action: [:fill, 'post_data_field_163', '163'])
+      # test_unset_css('#post_data_field_164_input label.red', action: [:fill, 'post_data_field_164', '164'])
 
       # --- not
-      expect(page).to have_css('#post_data_field_171_input label.red')
-      fill_in('post_data_field_171', with: '171')
-      find('body').click
-      expect(page).not_to have_css('#post_data_field_171_input label.red')
-
-      expect(page).to have_css('#post_data_field_172_input label.red')
-      select('172', from: 'post_data_field_172')
-      expect(page).not_to have_css('#post_data_field_172_input label.red')
-
-      expect(page).to have_css('#post_data_field_173_input label.red')
-      fill_in('post_data_field_173', with: '173')
-      find('body').click
-      expect(page).not_to have_css('#post_data_field_173_input label.red')
+      spec_message('check data-not condition')
+      test_unset_css('#post_data_field_171_input label.red', action: [:fill, 'post_data_field_171', '171'])
+      test_unset_css('#post_data_field_172_input label.red', action: [:select, 'post_data_field_172', '172'])
+      test_unset_css('#post_data_field_173_input label.red', action: [:fill, 'post_data_field_173', '173'])
 
       # --- match
-      expect(page).not_to have_css('#post_data_field_181_input label.red')
-      fill_in('post_data_field_181', with: ' Something new ...')
-      find('body').click
-      expect(page).to have_css('#post_data_field_181_input label.red')
+      spec_message('check data-match condition')
+      test_set_css('#post_data_field_181_input label.red', action: [:fill, 'post_data_field_181', ' Something new ...'])
 
       # --- mismatch
-      expect(page).to have_css('#post_data_field_191_input label.red')
-      fill_in('post_data_field_191', with: '1234')
-      find('body').click
-      expect(page).not_to have_css('#post_data_field_191_input label.red')
+      spec_message('check data-mismatch condition')
+      test_unset_css('#post_data_field_191_input label.red', action: [:fill, 'post_data_field_191', '1234'])
 
       # --- function
-      expect(page).not_to have_css('#post_data_field_201_input label.red')
-      fill_in('post_data_field_201', with: 'test')
-      find('body').click
-      expect(page).to have_css('#post_data_field_201_input label.red')
-
+      spec_message('check data-function condition')
+      test_set_css('#post_data_field_201_input label.red', action: [:fill, 'post_data_field_201', 'test'])
       expect(page).to have_css('#post_data_field_202[data-df-errors="custom function not found"]')
-
-      expect(page).to have_css('#post_data_field_203.red')
-      find('#post_data_field_203').click
-      expect(page).not_to have_css('#post_data_field_203.red')
+      test_unset_css('#post_data_field_203.red', action: [:click, '#post_data_field_203'])
 
       # --- addClass
-      expect(page).not_to have_css('#post_data_field_211_input label.red')
-      find('#post_data_field_211').click
-      expect(page).to have_css('#post_data_field_211_input label.red')
-      find('#post_data_field_211').click
-      expect(page).not_to have_css('#post_data_field_211_input label.red')
+      spec_message('check data-then="addClass ..." action')
+      test_set_css('#post_data_field_211_input label.red', action: [:click, '#post_data_field_211'])
 
       # --- callback
-      expect(page).not_to have_css('body.test_callback_arg')
-      find('#post_data_field_221').click
-      expect(page).to have_css('body.test_callback_arg')
-
+      spec_message('check data-then="callback ..." action')
+      test_set_css('body.test_callback_arg', one_way: true, action: [:click, '#post_data_field_221'])
       find('#post_data_field_222').click
       expect(page).to have_css('#post_data_field_222[data-df-errors="callback function not found"]')
 
       # --- setValue
+      spec_message('check data-then="setValue ..." action')
       expect(find('#post_data_test').value).to be_empty
       find('#post_data_field_231').click
       expect(find('#post_data_test').value).to eq 'data test'
 
       # --- hide
-      expect(page).to have_css('#post_data_field_241_input .inline-hints', visible: :visible)
-      find('#post_data_field_241').click
-      expect(page).to have_css('#post_data_field_241_input .inline-hints', visible: :hidden)
+      spec_message('check data-then="hide" action')
+      target = '#post_data_field_241_input .inline-hints'
+      test_change_css(target, { visible: :visible }, { visible: :hidden }, action: [:click, '#post_data_field_241'])
 
       # --- fade
-      expect(page).to have_css('#post_data_field_251_input .inline-hints', visible: :visible)
-      find('#post_data_field_251').click
-      expect(page).to have_css('#post_data_field_251_input .inline-hints', visible: :hidden)
+      spec_message('check data-then="fade" action')
+      target = '#post_data_field_251_input .inline-hints'
+      test_change_css(target, { visible: :visible }, { visible: :hidden }, action: [:click, '#post_data_field_251'])
 
       # --- slide
-      expect(page).to have_css('#post_data_field_261_input .inline-hints', visible: :visible)
-      find('#post_data_field_261').click
-      expect(page).to have_css('#post_data_field_261_input .inline-hints', visible: :hidden)
+      spec_message('check data-then="slide" action')
+      target = '#post_data_field_261_input .inline-hints'
+      test_change_css(target, { visible: :visible }, { visible: :hidden }, action: [:click, '#post_data_field_261'])
 
       # --- setText
+      spec_message('check data-then="setText ..." action')
       expect(find('#post_data_field_271_input .inline-hints').text).not_to eq 'data test'
       find('#post_data_field_271').click
-      expect(find('#post_data_field_271_input .inline-hints').text).to eq 'data test'
+      expect(page).to have_css('#post_data_field_271_input .inline-hints', text: 'data test')
 
       # --- addStyle
-      expect(find('#post_data_field_281')[:style]).to eq 'margin-right: 20px;'
-      find('#post_data_field_281').click
-      expect(find('#post_data_field_281')[:style]).to eq 'margin-right: 20px; font-size: 10px; color: red;'
-      find('#post_data_field_281').click
-      expect(find('#post_data_field_281')[:style]).to eq 'margin-right: 20px;'
+      spec_message('check data-then="addStyle ..." action')
+      style1 = { style: { 'margin-right': '20px' } }
+      style2 = { style: 'margin-right: 20px; font-size: 10px; padding: 3px' }
+      test_change_css('#post_data_field_281', style1, style2, action: [:click, '#post_data_field_281'])
 
       # --- gtarget
-      expect(page).not_to have_css('body.active_admin.red')
-      find('#post_data_field_301').click
-      expect(page).to have_css('body.active_admin.red')
-      find('#post_data_field_301').click
-      expect(page).not_to have_css('body.active_admin.red')
-
+      spec_message('check data-gtarget="..."')
+      test_set_css('body.active_admin.red', action: [:click, '#post_data_field_301'])
       find('#post_data_field_302').click # checks that using simply "target" will not work
       expect(page).not_to have_css('body.active_admin.red')
 
       # --- else
+      spec_message('check data-else="..."')
       expect(page).not_to have_css('#post_data_field_321_input label.red')
       expect(page).to have_css('#post_data_field_321_input label.green')
       find('#post_data_field_321').click

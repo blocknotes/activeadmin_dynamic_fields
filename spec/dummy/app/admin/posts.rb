@@ -148,7 +148,7 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
       add_field(f, :data_field_271, :boolean, df271)
 
       # --- addStyle
-      df281 = { if: 'checked', then: 'addStyle font-size: 10px; color: red', target: '#post_data_field_281' }
+      df281 = { if: 'checked', then: 'addStyle font-size: 10px; padding: 3px', target: '#post_data_field_281' }
       add_field(f, :data_field_281, :boolean, df281, {}, { 'style': 'margin-right: 20px' })
 
       # --- gtarget
