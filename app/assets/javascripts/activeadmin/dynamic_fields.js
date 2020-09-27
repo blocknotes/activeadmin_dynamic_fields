@@ -52,48 +52,16 @@
 
   class Field {
     constructor(el) {
-      const action = el.data('then') || el.data('action') || ''
-      const action_name = action.split(' ', 1)[0]
-      const else_action = el.data('else') || ''
-      const else_action_name = else_action.split(' ', 1)[0]
-
       this.el = el
-      this.action = ACTIONS[action_name]
-      this.action_arg = action.substring(action.indexOf(' ') + 1)
-      this.reverse_action = REVERSE_ACTIONS[action_name]
-      this.else_action = ACTIONS[else_action_name]
-      this.else_action_arg = else_action.substring(else_action.indexOf(' ') + 1)
-      this.else_reverse_action = REVERSE_ACTIONS[else_action_name]
-      this.condition = CONDITIONS[el.data('if')]
-      if (!this.condition && el.data('eq')) {
-        [this.condition, this.condition_arg] = [CONDITIONS['eq'], el.data('eq')]
-      }
-      if (!this.condition && el.data('not')) {
-        [this.condition, this.condition_arg] = [CONDITIONS['not'], el.data('not')]
-      }
-      if (!this.condition && el.data('match')) {
-        [this.condition, this.condition_arg] = [CONDITIONS['match'], new RegExp(el.data('match'))]
-      }
-      if (!this.condition && el.data('mismatch')) {
-        [this.condition, this.condition_arg] = [CONDITIONS['mismatch'], new RegExp(el.data('mismatch'))]
-      }
-      this.custom_function = el.data('function')
-      if (!this.condition && this.custom_function) {
-        this.condition = window[this.custom_function]
-        if (!this.condition) {
-          el.attr('data-df-errors', 'custom function not found')
-          console.warn(`activeadmin_dynamic_fields custom function not found: ${this.custom_function}`)
-        }
-      }
-
-      // closest find for has many associations
-      if (el.data('target')) this.target = el.closest('fieldset').find(el.data('target'))
-      else if (el.data('gtarget')) this.target = $(el.data('gtarget'))
-      if (action_name == 'callback') this.target = el
+      const action_name = this.evaluateAction()
+      const result = this.evaluateCondition()
+      this.condition = result.condition
+      this.condition_arg = result.condition_arg
+      this.evaluateTarget(action_name)
     }
 
-    apply(el) {
-      if (this.condition(el, this.condition_arg)) {
+    apply() {
+      if (this.condition(this.el, this.condition_arg)) {
         if (this.else_reverse_action) this.else_reverse_action(this.target, this.else_action_arg)
         this.action(this.target, this.action_arg)
       }
@@ -103,7 +71,51 @@
       }
     }
 
-    is_valid() {
+    evaluateAction() {
+      const action = this.el.data('then') || this.el.data('action') || ''
+      const action_name = action.split(' ', 1)[0]
+      const else_action = this.el.data('else') || ''
+      const else_action_name = else_action.split(' ', 1)[0]
+
+      this.action = ACTIONS[action_name]
+      this.action_arg = action.substring(action.indexOf(' ') + 1)
+      this.reverse_action = REVERSE_ACTIONS[action_name]
+      this.else_action = ACTIONS[else_action_name]
+      this.else_action_arg = else_action.substring(else_action.indexOf(' ') + 1)
+      this.else_reverse_action = REVERSE_ACTIONS[else_action_name]
+
+      return action_name
+    }
+
+    evaluateCondition() {
+      let value = CONDITIONS[this.el.data('if')?.trim()]
+      if (value) return { condition: value }
+      if (value = this.el.data('eq')) return { condition: CONDITIONS['eq'], condition_arg: value }
+      if (value = this.el.data('not')) return { condition: CONDITIONS['not'], condition_arg: value }
+      if (value = this.el.data('match')) return { condition: CONDITIONS['match'], condition_arg: new RegExp(value) }
+      if (value = this.el.data('mismatch')) return { condition: CONDITIONS['mismatch'], condition_arg: new RegExp(value) }
+
+      this.custom_function = this.el.data('function')
+      if (this.custom_function) {
+        value = window[this.custom_function]
+        if (value) return { condition: value }
+        else {
+          this.el.attr('data-df-errors', 'custom function not found')
+          console.warn(`activeadmin_dynamic_fields custom function not found: ${this.custom_function}`)
+        }
+      }
+
+      return {}
+    }
+
+    evaluateTarget(action_name) {
+      // closest find for has many associations
+      if (this.el.data('target')) this.target = this.el.closest('fieldset').find(this.el.data('target'))
+      else if (this.el.data('gtarget')) this.target = $(this.el.data('gtarget'))
+      if (action_name == 'callback') this.target = this.el
+    }
+
+    isValid() {
       if (!this.condition) return false
       if (!this.action && !this.custom_function) return false
 
@@ -111,9 +123,9 @@
     }
 
     setup() {
-      if (!this.is_valid()) return
-      if (this.el.data('if') != 'changed') this.apply(this.el)
-      this.el.on('change', () => this.apply(this.el))  
+      if (!this.isValid()) return
+      if (this.el.data('if') != 'changed') this.apply()
+      this.el.on('change', () => this.apply())  
     }
   }
 
