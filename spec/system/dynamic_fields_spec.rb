@@ -74,7 +74,7 @@ RSpec.describe 'Dynamic fields', type: :system do
       # --- if
       spec_message('check data-if condition')
       test_set_css('#post_data_field_111_input label.red', action: [:click, '#post_data_field_111'])
-      # test_unset_css('#post_data_field_112_input label.red', action: [:click, '#post_data_field_112'])
+      test_unset_css('#post_data_field_112_input label.red', action: [:click, '#post_data_field_112'])
       test_unset_css('#post_data_field_121_input label.red', action: [:click, '#post_data_field_121'])
       test_unset_css('#post_data_field_131_input label.red', action: [:fill, 'post_data_field_131', 'something'])
       test_unset_css('#post_data_field_132_input label.red', action: [:fill, 'post_data_field_132', 'something'])
@@ -91,7 +91,7 @@ RSpec.describe 'Dynamic fields', type: :system do
       test_set_css('#post_data_field_161_input label.red', action: [:fill, 'post_data_field_161', '161'])
       test_set_css('#post_data_field_162_input label.red', action: [:select, 'post_data_field_162', '162'])
       test_set_css('#post_data_field_163_input label.red', action: [:fill, 'post_data_field_163', '163'])
-      # test_unset_css('#post_data_field_164_input label.red', action: [:fill, 'post_data_field_164', '164'])
+      test_unset_css('#post_data_field_164_input label.red', action: [:fill, 'post_data_field_164', '164'])
 
       # --- not
       spec_message('check data-not condition')
