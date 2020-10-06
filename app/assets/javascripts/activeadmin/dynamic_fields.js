@@ -11,7 +11,7 @@
       }
     },
     callback: (el, name) => {
-      if (window[name]) window[name](el.data('args'))
+      if (window[name]) window[name](el)
       else {
         el.attr('data-df-errors', 'callback function not found')
         console.warn(`activeadmin_dynamic_fields callback function not found: ${name}`)
@@ -43,6 +43,7 @@
     addStyle: (el, extra_style) => {
       if(el.attr('style')) el.attr('style', el.attr('style').replace(extra_style, ''))
     },
+    callback: (el, name) => ACTIONS.callback(el, name),
     fade: el => el.fadeIn(),
     hide: el => el.show(),
     slide: el => el.slideDown()
