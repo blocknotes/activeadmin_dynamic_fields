@@ -41,35 +41,36 @@ require('activeadmin_dynamic_fields')
 
 ## Options
 
-Options are passed to fields using *input_html* parameter as *data* attributes.
+Options are passed to form fields via *data* attributes (in *input_html* parameter).
 
 Conditions:
 
 - **data-if**: check a condition, values:
-  + **checked**: check if a checkbox is checked (ex. `"data-if": "checked"`)
-  + **not_checked**: check if a checkbox is not checked (equivalent to `"data-if": "!checked"`)
+  + **checked**: check if a checkbox is checked (ex. `data: { if: "checked" }`)
+  + **not_checked**: check if a checkbox is not checked (equivalent to `data: { if: "!checked" }`)
   + **blank**: check if a field is blank
   + **not_blank**: check if a field is not blank
   + **changed**: check if the value of an input is changed (dirty)
-- **data-eq**: check if a field has a specific value (ex. `"data-eq": "42"` or `"data-eq": "!5"`)
-- **data-not**: check if a field has not a specific value (equivalent to `"data-eq": "!something"`)
+- **data-eq**: check if a field has a specific value (ex. `data: { eq: "42" }` or `data: { eq: "!5" }`)
+- **data-not**: check if a field has not a specific value (equivalent to `data: { eq: "!something" }`)
 - **data-match**: check if a field match a regexp
-- **data-mismatch**: check if a field doesn't match a regexp (ex. `"data-mismatch": "^\d+$"`)
-- **data-function**: check the return value of a custom function (ex. `"data-function": "my_check"`)
+- **data-mismatch**: check if a field doesn't match a regexp (ex. `data: { mismatch: "^\d+$" }`)
+- **data-function**: check the return value of a custom function (ex. `data: { function: "my_check" }`)
 
 Actions:
 
 - **data-then**: action to trigger (alias **data-action**), values:
-  + **hide**: hides elements (ex. `"data-then": "hide", "data-target": ".errors"`)
+  + **hide**: hides elements (ex. `data: { then: "hide", target: ".errors" }`)
   + **slide**: hides elements (using sliding)
   + **fade**: hides elements (using fading)
-  + **addClass**: adds classes (ex. `"data-then": "addClass red"`)
-  + **addStyle**: adds some styles (ex. `"data-then": "addStyle color: #fb1; font-size: 12px"`)
-  + **setText**: set the text of an element (ex. `"data-then": "setText A sample text"`)
-  + **setValue**: set the value of an input element (ex. `"data-then": "setValue A sample value"`)
-  + **callback**: call a function (with arguments: **data-args**) (ex. `"data-then": "callback a_fun"`)
-- **data-else**: action to trigger when the condition check is not true
-- **data-args**: arguments passed to the callback function
+  + **addClass**: adds classes (ex. `data: { then: "addClass", args: "red", target: "#something"}`)
+  + **addStyle**: adds some styles (ex. `data: { then: "addStyle", args: "color: #fb1; font-size: 12px" }`)
+  + **setText**: set the text of an element (ex. `data: { then: "setText", args: "A sample text" }`)
+  + **setValue**: set the value of an input element (ex. `data: { then: "setValue", args: "A sample value" }`)
+  + **callback**: call a function (with arguments: **data-args**) (ex. `data: { then: "callback" }`)
+- **data-args**: extra arguments for the action, for callback action this parameter is the name of the JS function to call
+- **data-else**: action to trigger when the condition check is not true (ex. `data: { else: "fade" }`)
+- **data-else-args**: extra arguments for the else action (ex. `data: { else: "addClass", else_args: "red" }`)
 
 Targets:
 
@@ -98,14 +99,14 @@ end
 - Add 3 classes (*first*, *second*, *third*) if a checkbox is not checked, else add "forth" class:
 
 ```rb
-data = { if: 'not_checked', then: 'addClass first second third', target: '.grp1', else: 'addClass forth' }
+data = { if: 'not_checked', then: 'addClass', args: 'first second third', target: '.grp1', else: 'addClass', elseArgs: 'forth' }
 f.input :published, input_html: { data: data }
 ```
 
 - Set another field value if a string field is blank:
 
 ```rb
-f.input :title, input_html: { data: { if: 'blank', then: 'setValue 10', target: '#article_position' } }
+f.input :title, input_html: { data: { if: 'blank', then: 'setValue', args: '10', target: '#article_position' } }
 ```
 
 - Use a custom function for conditional check (*title_not_empty()* must be available on global scope) (with alternative syntax for data attributes):
@@ -124,16 +125,13 @@ function title_empty(el) {
 - Call a callback function as action:
 
 ```rb
-data = { if: 'checked', then: 'callback set_title', args: '["Unpublished !"]' }
+data = { if: 'checked', then: 'callback', args: 'set_title' }
 f.input :published, input_html: { data: data }
 ```
 
 ```js
-function set_title(args) {
-  if($('#article_title').val().trim() === '') {
-    $('#article_title').val(args[0]);
-    $('#article_title').trigger('change');
-  }
+function set_title(el) {
+  console.log(el.value());
 }
 ```
 
