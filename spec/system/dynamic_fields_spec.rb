@@ -119,15 +119,14 @@ RSpec.describe 'Dynamic fields', type: :system do
 
       # --- callback
       spec_message('check data-then="callback ..." action')
-      test_set_css('body.test_callback_arg', one_way: true, action: [:click, '#post_data_field_221'])
-      find('#post_data_field_222').click
+      test_unset_css('body.test_callback', action: [:click, '#post_data_field_221'])
       expect(page).to have_css('#post_data_field_222[data-df-errors="callback function not found"]')
 
       # --- setValue
       spec_message('check data-then="setValue ..." action')
-      expect(find('#post_data_test').value).to be_empty
+      expect(page).to have_field('post_data_test', with: '')
       find('#post_data_field_231').click
-      expect(find('#post_data_test').value).to eq 'data test'
+      expect(page).to have_field('post_data_test', with: 'data test')
 
       # --- hide
       spec_message('check data-then="hide" action')
@@ -146,9 +145,9 @@ RSpec.describe 'Dynamic fields', type: :system do
 
       # --- setText
       spec_message('check data-then="setText ..." action')
-      expect(find('#post_data_field_271_input .inline-hints').text).not_to eq 'data test'
+      expect(page).not_to have_css('#post_data_field_271_input .inline-hints', text: /\Adata test\Z/)
       find('#post_data_field_271').click
-      expect(page).to have_css('#post_data_field_271_input .inline-hints', text: 'data test')
+      expect(page).to have_css('#post_data_field_271_input .inline-hints', text: /\Adata test\Z/)
 
       # --- addStyle
       spec_message('check data-then="addStyle ..." action')
