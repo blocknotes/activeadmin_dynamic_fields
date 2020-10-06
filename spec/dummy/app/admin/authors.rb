@@ -8,7 +8,7 @@ ActiveAdmin.register Author do
     context = Arbre::Context.new do
       dl do
         %i[name age created_at].each do |field|
-          dt Author.human_attribute_name(field) + ':'
+          dt "#{Author.human_attribute_name(field)}:"
           dd record[field]
         end
       end
@@ -53,7 +53,7 @@ ActiveAdmin.register Author do
               hint: (object.avatar.attached? ? "Current: #{object.avatar.filename}" : nil)
     end
     f.has_many :profile, allow_destroy: true do |ff|
-      dyn_description = { if: 'not_blank', then: 'addClass red', gtarget: 'body' }
+      dyn_description = { if: 'not_blank', then: 'addClass', args: 'red', gtarget: 'body' }
       ff.input :description, input_html: { data: dyn_description }
     end
     f.actions

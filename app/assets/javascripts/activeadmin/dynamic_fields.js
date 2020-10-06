@@ -73,18 +73,16 @@
 
     evaluateAction() {
       const action = this.el.data('then') || this.el.data('action') || ''
-      const action_name = action.split(' ', 1)[0]
       const else_action = this.el.data('else') || ''
-      const else_action_name = else_action.split(' ', 1)[0]
 
-      this.action = ACTIONS[action_name]
-      this.action_arg = action.substring(action.indexOf(' ') + 1)
-      this.reverse_action = REVERSE_ACTIONS[action_name]
-      this.else_action = ACTIONS[else_action_name]
-      this.else_action_arg = else_action.substring(else_action.indexOf(' ') + 1)
-      this.else_reverse_action = REVERSE_ACTIONS[else_action_name]
+      this.action = ACTIONS[action]
+      this.action_arg = this.el.data('args')
+      this.reverse_action = REVERSE_ACTIONS[action]
+      this.else_action = ACTIONS[else_action]
+      this.else_action_arg = this.el.data('elseArgs')
+      this.else_reverse_action = REVERSE_ACTIONS[else_action]
 
-      return action_name
+      return action
     }
 
     evaluateCondition() {
