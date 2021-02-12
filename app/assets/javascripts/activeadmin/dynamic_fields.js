@@ -11,7 +11,7 @@
       }
     },
     callback: (el, name) => {
-      if (window[name]) window[name](el.data('args'))
+      if (window[name]) window[name](el)
       else {
         el.attr('data-df-errors', 'callback function not found')
         console.warn(`activeadmin_dynamic_fields callback function not found: ${name}`)
@@ -27,7 +27,6 @@
     },
     slide: el => el.slideUp()
   }
-
   const CONDITIONS = {
     blank: el => el.val().length === 0 || !el.val().trim(),
     changed: _el => true,
@@ -36,19 +35,21 @@
     match: (el, regexp) => regexp.test(el.val()),
     mismatch: (el, regexp) => !regexp.test(el.val()),
     not: (el, value) => el.val() != value,
-    not_blank: el => el.val().trim(),
+    not_blank: el => !CONDITIONS.blank(el),
     not_checked: el => !el.is(':checked')
   }
-
   const REVERSE_ACTIONS = {
     addClass: (el, name) => el.removeClass(name),
     addStyle: (el, extra_style) => {
       if(el.attr('style')) el.attr('style', el.attr('style').replace(extra_style, ''))
     },
+    callback: (el, name) => ACTIONS.callback(el, name),
     fade: el => el.fadeIn(),
     hide: el => el.show(),
     slide: el => el.slideDown()
   }
+
+  const REGEXP_NOT = /^!\s*/
 
   class Field {
     constructor(el) {
@@ -73,27 +74,42 @@
 
     evaluateAction() {
       const action = this.el.data('then') || this.el.data('action') || ''
-      const action_name = action.split(' ', 1)[0]
       const else_action = this.el.data('else') || ''
-      const else_action_name = else_action.split(' ', 1)[0]
 
-      this.action = ACTIONS[action_name]
-      this.action_arg = action.substring(action.indexOf(' ') + 1)
-      this.reverse_action = REVERSE_ACTIONS[action_name]
-      this.else_action = ACTIONS[else_action_name]
-      this.else_action_arg = else_action.substring(else_action.indexOf(' ') + 1)
-      this.else_reverse_action = REVERSE_ACTIONS[else_action_name]
+      this.action = ACTIONS[action]
+      this.action_arg = this.el.data('args')
+      this.reverse_action = REVERSE_ACTIONS[action]
+      this.else_action = ACTIONS[else_action]
+      this.else_action_arg = this.el.data('elseArgs')
+      this.else_reverse_action = REVERSE_ACTIONS[else_action]
 
-      return action_name
+      return action
     }
 
     evaluateCondition() {
-      let value = CONDITIONS[this.el.data('if')?.trim()]
-      if (value) return { condition: value }
-      if (value = this.el.data('eq')) return { condition: CONDITIONS['eq'], condition_arg: value }
-      if (value = this.el.data('not')) return { condition: CONDITIONS['not'], condition_arg: value }
-      if (value = this.el.data('match')) return { condition: CONDITIONS['match'], condition_arg: new RegExp(value) }
-      if (value = this.el.data('mismatch')) return { condition: CONDITIONS['mismatch'], condition_arg: new RegExp(value) }
+      let value
+      if (value = this.el.data('if')) {
+        if (REGEXP_NOT.test(value)) value = 'not_' + value.replace(REGEXP_NOT, '')
+        return { condition: CONDITIONS[value] }
+      }
+      if (value = this.el.data('eq')) {
+        if (REGEXP_NOT.test(value)) {
+          return { condition: CONDITIONS['not'], condition_arg: value.replace(REGEXP_NOT, '') }
+        }
+        return { condition: CONDITIONS['eq'], condition_arg: value }
+      }
+      if (value = this.el.data('not')) {
+        if (REGEXP_NOT.test(value)) {
+          return { condition: CONDITIONS['eq'], condition_arg: value.replace(REGEXP_NOT, '') }
+        }
+        return { condition: CONDITIONS['not'], condition_arg: value }
+      }
+      if (value = this.el.data('match')) {
+        return { condition: CONDITIONS['match'], condition_arg: new RegExp(value) }
+      }
+      if (value = this.el.data('mismatch')) {
+        return { condition: CONDITIONS['mismatch'], condition_arg: new RegExp(value) }
+      }
 
       this.custom_function = this.el.data('function')
       if (this.custom_function) {
