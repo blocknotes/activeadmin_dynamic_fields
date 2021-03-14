@@ -190,8 +190,7 @@
     }
   }
 
-  // Init
-  $(document).ready(function () {
+  function dfInit() {
     // Setup dynamic fields
     const selectors = '.active_admin .input [data-if], .active_admin .input [data-eq], .active_admin .input [data-not], .active_admin .input [data-match], .active_admin .input [data-mismatch], .active_admin .input [data-function]'
     $(selectors).each(function () {
@@ -249,5 +248,8 @@
     $('[data-field][data-field-type="select"][data-save-url]').each(function () {
       $(this).on('change', $.proxy(dfUpdateField, $(this)))
     })
-  })
+  }
+
+  $(document).ready(dfInit)
+  $(document).on('turbolinks:load', dfInit)
 })()
