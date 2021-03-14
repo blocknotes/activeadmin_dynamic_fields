@@ -1,6 +1,7 @@
 (function () {
   'use strict'
 
+  // noinspection JSUnusedGlobalSymbols
   const ACTIONS = {
     addClass: (el, name) => el.addClass(name),
     addStyle: (el, extra_style) => {
@@ -11,7 +12,8 @@
       }
     },
     callback: (el, name) => {
-      if (window[name]) window[name](el.data('args'))
+      const cb_function = window.hasOwnProperty(name) ? window[name] : null
+      if (typeof cb_function === 'function') cb_function(el.data('args'))
       else {
         el.attr('data-df-errors', 'callback function not found')
         console.warn(`activeadmin_dynamic_fields callback function not found: ${name}`)
@@ -21,13 +23,14 @@
     hide: el => el.hide(),
     setText: (el, text) => el.text(text),
     setValue: (el, value) => {
-      if (el.attr('type') == 'checkbox') el.prop('checked', value == '1')
+      if (el.attr('type') === 'checkbox') el.prop('checked', value === '1')
       else el.val(value)
       el.trigger('change')
     },
     slide: el => el.slideUp()
   }
 
+  // noinspection EqualityComparisonWithCoercionJS, JSUnusedGlobalSymbols
   const CONDITIONS = {
     blank: el => el.val().length === 0 || !el.val().trim(),
     changed: _el => true,
@@ -90,10 +93,18 @@
     evaluateCondition() {
       let value = CONDITIONS[this.el.data('if')?.trim()]
       if (value) return { condition: value }
-      if (value = this.el.data('eq')) return { condition: CONDITIONS['eq'], condition_arg: value }
-      if (value = this.el.data('not')) return { condition: CONDITIONS['not'], condition_arg: value }
-      if (value = this.el.data('match')) return { condition: CONDITIONS['match'], condition_arg: new RegExp(value) }
-      if (value = this.el.data('mismatch')) return { condition: CONDITIONS['mismatch'], condition_arg: new RegExp(value) }
+
+      value = this.el.data('eq')
+      if (value) return { condition: CONDITIONS['eq'], condition_arg: value }
+
+      value = this.el.data('not')
+      if (value) return { condition: CONDITIONS['not'], condition_arg: value }
+
+      value = this.el.data('match')
+      if (value) return { condition: CONDITIONS['match'], condition_arg: new RegExp(value) }
+
+      value = this.el.data('mismatch')
+      if (value) return { condition: CONDITIONS['mismatch'], condition_arg: new RegExp(value) }
 
       this.custom_function = this.el.data('function')
       if (this.custom_function) {
@@ -112,32 +123,30 @@
       // closest find for has many associations
       if (this.el.data('target')) this.target = this.el.closest('fieldset').find(this.el.data('target'))
       else if (this.el.data('gtarget')) this.target = $(this.el.data('gtarget'))
-      if (action_name == 'callback') this.target = this.el
+      if (action_name === 'callback') this.target = this.el
     }
 
     isValid() {
       if (!this.condition) return false
-      if (!this.action && !this.custom_function) return false
-
-      return true
+      return (this.action || this.custom_function)
     }
 
     setup() {
       if (!this.isValid()) return
-      if (this.el.data('if') != 'changed') this.apply()
+      if (this.el.data('if') !== 'changed') this.apply()
       this.el.on('change', () => this.apply())  
     }
   }
 
-  // Inline update - must be called binded on the editing element
+  // Inline update - must be called bound on the editing element
   function dfUpdateField() {
-    if ($(this).data('loading') != '1') {
+    if ($(this).data('loading') !== '1') {
       $(this).data('loading', '1');
       let _this = $(this);
       let type = $(this).data('field-type');
       let new_value;
-      if (type == 'boolean') new_value = !$(this).data('field-value');
-      else if (type == 'select') new_value = $(this).val();
+      if (type === 'boolean') new_value = !$(this).data('field-value');
+      else if (type === 'select') new_value = $(this).val();
       else new_value = $(this).text();
       let data = {};
       data[$(this).data('field')] = new_value;
@@ -146,16 +155,16 @@
         data: { data: data },
         method: 'POST',
         url: $(this).data('save-url'),
-        complete: function (req, status) {
+        complete: function (_req, _status) {
           $(this).data('loading', '0');
         },
-        success: function (data, status, req) {
-          if (data.status == 'error') {
+        success: function (data, _status, _req) {
+          if (data.status === 'error') {
             if ($(this).data('show-errors')) {
               let result = '';
               let message = data.message;
               for (let key in message) {
-                if (typeof (message[key]) === 'object') {
+                if (message.hasOwnProperty(key) && typeof (message[key]) === 'object') {
                   if (result) result += ' - ';
                   result += key + ': ' + message[key].join('; ');
                 }
@@ -205,20 +214,23 @@
     $('.active_admin [data-df-dialog]').on('click', function (event) {
       event.preventDefault()
       $(this).blur()
-      if ($('#df-dialog').data('loading') != '1') {
-        $('#df-dialog').data('loading', '1')
-        if ($('#df-dialog').length == 0) $('body').append('<div id="df-dialog"></div>')
+      const df_dialog = $('#df-dialog')
+
+      if (df_dialog.data('loading') !== '1') {
+        df_dialog.data('loading', '1')
+        if (df_dialog.length === 0) $('body').append('<div id="df-dialog"></div>')
         let title = $(this).attr('title')
         $.ajax({
           url: $(this).attr('href'),
-          complete: function (req, status) {
+          complete: function (_req, _status) {
             $('#df-dialog').data('loading', '0')
           },
-          success: function (data, status, req) {
-            if (title) $('#df-dialog').attr('title', title)
-            $('#df-dialog').html(data)
-            $('#df-dialog').dialog({ modal: true })
-          },
+          success: function (data, _status, _req) {
+            const dialog = $('#df-dialog')
+            if (title) dialog.attr('title', title)
+            dialog.html(data)
+            dialog.dialog({ modal: true })
+          }
         })
       }
     })
@@ -231,7 +243,7 @@
       $(this).data('field-value', $(this).text())
       let fnUpdate = $.proxy(dfUpdateField, $(this))
       $(this).on('blur', function () {
-        if ($(this).data('field-value') != $(this).text()) fnUpdate()
+        if ($(this).data('field-value') !== $(this).text()) fnUpdate()
       })
     })
     $('[data-field][data-field-type="select"][data-save-url]').each(function () {
