@@ -1,8 +1,9 @@
-# ActiveAdmin Dynamic Fields [![Gem Version](https://badge.fury.io/rb/activeadmin_dynamic_fields.svg)](https://badge.fury.io/rb/activeadmin_dynamic_fields) [![CircleCI](https://circleci.com/gh/blocknotes/activeadmin_dynamic_fields.svg?style=svg)](https://circleci.com/gh/blocknotes/activeadmin_dynamic_fields)
+# ActiveAdmin Dynamic Fields [![Gem Version](https://badge.fury.io/rb/activeadmin_dynamic_fields.svg)](https://badge.fury.io/rb/activeadmin_dynamic_fields) [![Specs](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml/badge.svg)](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml)
 
 An Active Admin plugin to add dynamic behaviors to some fields.
 
 Features:
+
 - set conditional checks on fields
 - trigger actions on target elements
 - inline field editing
@@ -11,6 +12,7 @@ Features:
 The easiest way to show how this plugin works is looking the examples [below](#examples).
 
 ## Install
+
 - Add to your Gemfile: `gem 'activeadmin_dynamic_fields'`
 - Execute bundle
 - Add at the end of your ActiveAdmin javascripts (_app/assets/javascripts/active_admin.js_):
@@ -20,9 +22,11 @@ The easiest way to show how this plugin works is looking the examples [below](#e
 ```
 
 ## Options
+
 Options are passed to fields using *input_html* parameter as *data* attributes.
 
 Conditions:
+
 - **data-if**: check a condition, values:
   + **checked**: check if a checkbox is checked (ex. `"data-if": "checked"`)
   + **not_checked**: check if a checkbox is not checked
@@ -36,6 +40,7 @@ Conditions:
 - **data-function**: check the return value of a custom function (ex. `"data-function": "my_check"`)
 
 Actions:
+
 - **data-then**: action to trigger (alias **data-action**), values:
   + **hide**: hides elements (ex. `"data-then": "hide", "data-target": ".errors"`)
   + **slide**: hides elements (using sliding)
@@ -49,6 +54,7 @@ Actions:
 - **data-args**: arguments passed to the callback function
 
 Targets:
+
 - **data-target**: target css selector (from parent fieldset, look for the closest match)
 - **data-gtarget**: target css selector globally
 
@@ -57,6 +63,7 @@ A check condition or a custom check function are required. A trigger action is r
 ## Examples
 
 ### Dynamic fields examples
+
 - A checkbox that hides other fields if is checked (ex. model *Article*):
 
 ```rb
@@ -128,6 +135,7 @@ function on_change_category(el) {
 ```
 
 ### Inline editing examples
+
 - Prepare a custom member action to save data, an *update* helper function is available (third parameter is optional, allow to filter using strong parameters):
 
 ```rb
@@ -165,6 +173,7 @@ end
 ```
 
 ### Dialog example
+
 Example with 2 models: *Author* and *Article*
 
 Prepare the content dialog - in Active Admin Author config:
@@ -208,13 +217,16 @@ end
 The link url is loaded via AJAX before opening the dialog.
 
 ## Do you like it? Star it!
+
 If you use this component just star it. A developer is more motivated to improve a project when there is some interest. My other [Active Admin components](https://github.com/blocknotes?utf8=✓&tab=repositories&q=activeadmin&type=source).
 
 Or consider offering me a coffee, it's a small thing but it is greatly appreciated: [about me](https://www.blocknot.es/about-me).
 
 ## Contributors
+
 - [Mattia Roccoberton](http://blocknot.es): author
 - The good guys that opened issues and pull requests from time to time
 
 ## License
+
 The gem is available as open-source under the terms of the [MIT](LICENSE.txt).
