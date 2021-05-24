@@ -1,6 +1,6 @@
 {
   "name": "activeadmin_dynamic_fields",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "An Active Admin plugin to add dynamic behaviors to fields",
   "repository": "https://github.com/blocknotes/activeadmin_dynamic_fields",
   "author": "Mattia Roccoberton <mat@blocknot.es>",
