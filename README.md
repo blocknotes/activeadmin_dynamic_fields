@@ -15,12 +15,27 @@ Please :star: if you like it.
 
 ## Install
 
-- Add to your Gemfile: `gem 'activeadmin_dynamic_fields'`
-- Execute bundle
-- Add at the end of your ActiveAdmin javascripts (_app/assets/javascripts/active_admin.js_):
+First, add the gem to your ActiveAdmin project: `gem 'activeadmin_dynamic_fields'` (and execute `bundle`)
+
+If you installed Active Admin **without Webpacker** support:
+- add at the end of your ActiveAdmin javascripts (_app/assets/javascripts/active_admin.js_):
 
 ```js
 //= require activeadmin/dynamic_fields
+```
+
+Otherwise **with Webpacker**:
+
+- Execute in your project root:
+
+```sh
+yarn add blocknotes/activeadmin_dynamic_fields
+```
+
+- Add to your *app/javascript/packs/active_admin.js*:
+
+```js
+require('activeadmin_dynamic_fields')
 ```
 
 ## Options
