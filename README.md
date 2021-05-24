@@ -1,4 +1,4 @@
-# ActiveAdmin Dynamic Fields [![Gem Version](https://badge.fury.io/rb/activeadmin_dynamic_fields.svg)](https://badge.fury.io/rb/activeadmin_dynamic_fields) [![Specs](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml/badge.svg)](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml)
+# ActiveAdmin Dynamic Fields [![Gem Version](https://badge.fury.io/rb/activeadmin_dynamic_fields.svg)](https://badge.fury.io/rb/activeadmin_dynamic_fields) [![Gem downloads](https://badgen.net/rubygems/dt/activeadmin_dynamic_fields)](https://rubygems.org/gems/activeadmin_dynamic_fields) [![Specs](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml/badge.svg)](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml)
 
 An Active Admin plugin to add dynamic behaviors to some fields.
 
@@ -10,6 +10,8 @@ Features:
 - create links to load some content in a dialog
 
 The easiest way to show how this plugin works is looking the examples [below](#examples).
+
+Please :star: if you like it.
 
 ## Install
 
