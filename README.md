@@ -1,4 +1,5 @@
-# ActiveAdmin Dynamic Fields [![Gem Version](https://badge.fury.io/rb/activeadmin_dynamic_fields.svg)](https://badge.fury.io/rb/activeadmin_dynamic_fields) [![Gem downloads](https://badgen.net/rubygems/dt/activeadmin_dynamic_fields)](https://rubygems.org/gems/activeadmin_dynamic_fields) [![Specs](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml/badge.svg)](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml)
+# ActiveAdmin Dynamic Fields
+[![gem version](https://badge.fury.io/rb/activeadmin_dynamic_fields.svg)](https://badge.fury.io/rb/activeadmin_dynamic_fields) [![gem downloads](https://badgen.net/rubygems/dt/activeadmin_dynamic_fields)](https://rubygems.org/gems/activeadmin_dynamic_fields) [![linters](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/linters.yml/badge.svg)](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/linters.yml) [![specs](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml/badge.svg)](https://github.com/blocknotes/activeadmin_dynamic_fields/actions/workflows/specs.yml)
 
 An Active Admin plugin to add dynamic behaviors to some fields.
 
