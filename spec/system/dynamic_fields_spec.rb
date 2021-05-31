@@ -66,7 +66,7 @@ RSpec.describe 'Dynamic fields', type: :system do
   end
 
   context 'with some dynamic fields' do
-    it 'checks the conditions and actions' do
+    it 'checks the conditions and actions' do # rubocop:disable RSpec/ExampleLength
       visit "/admin/posts/#{post.id}/edit"
 
       expect(page).to have_css('#post_data_field_111[data-if="checked"][data-then="addClass red"][data-target="#post_data_field_111_input label"]') # rubocop:disable Layout/LineLength
