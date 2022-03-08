@@ -19,7 +19,7 @@ RSpec.describe 'Dynamic fields', type: :system do
       find(action[1]).click
     when :fill
       fill_in(action[1], with: inverse ? '' : action[2])
-      find('body').click
+      find('#post_author_id').click # blur focus
     when :select
       select(inverse ? '' : action[2], from: action[1])
     end
