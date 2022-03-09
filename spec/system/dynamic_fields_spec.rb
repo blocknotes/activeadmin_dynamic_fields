@@ -66,10 +66,10 @@ RSpec.describe 'Dynamic fields', type: :system do
   end
 
   context 'with some dynamic fields' do
-    it 'checks the conditions and actions', retry: 2 do # rubocop:disable RSpec/ExampleLength
+    it 'checks the conditions and actions', :aggregate_failures, retry: 2 do # rubocop:disable RSpec/ExampleLength
       visit "/admin/posts/#{post.id}/edit"
 
-      expect(page).to have_css('#post_data_field_111[data-if="checked"][data-then="addClass red"][data-target="#post_data_field_111_input label"]') # rubocop:disable Layout/LineLength
+      expect(page).to have_css('#post_data_field_111[data-if="checked"][data-then="addClass red"][data-target="#post_data_field_111_input label"]')
 
       # --- if
       spec_message('check data-if condition')
@@ -173,7 +173,7 @@ RSpec.describe 'Dynamic fields', type: :system do
   end
 
   context 'with some dynamic fields on a nested resource' do
-    it 'checks the conditions and actions' do
+    it 'checks the conditions and actions', :aggregate_failures do
       visit '/admin/authors/new'
 
       expect(page).not_to have_css('body.active_admin.red')

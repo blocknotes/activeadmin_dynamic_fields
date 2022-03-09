@@ -16,7 +16,7 @@ RSpec.describe 'Inline editing', type: :system do
   context 'with a column set for inline editing' do
     let(:editing_widget) { '.index_content .status_tag[data-field="published"][data-field-type="boolean"]' }
 
-    it 'includes the editing widget' do
+    it 'includes the editing widget', :aggregate_failures do
       visit "/admin/posts"
 
       expect(post.reload.published).to be_falsey
