@@ -91,7 +91,8 @@
     }
 
     evaluateCondition() {
-      let value = CONDITIONS[this.el.data('if')?.trim()]
+      let data_if = this.el.data('if')
+      let value = data_if ? CONDITIONS[data_if.trim()] : null
       if (value) return { condition: value }
 
       value = this.el.data('eq')
