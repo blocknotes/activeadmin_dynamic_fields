@@ -16,7 +16,7 @@ RSpec.describe 'Dialog', type: :system do
   context 'with a dialog' do
     subject(:author_link) { '.attributes_table .row-author a[data-df-dialog]' }
 
-    it 'opens the dialog' do
+    it 'opens the dialog', :aggregate_failures do
       visit "/admin/posts/#{post.id}"
 
       expect(page).to have_css(author_link)

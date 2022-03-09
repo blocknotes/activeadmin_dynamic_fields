@@ -20,24 +20,6 @@ AllCops:
 Gemspec/RequiredRubyVersion:
   Enabled: false
 
-Naming/FileName:
-  Enabled: false
-
-Layout/LineLength:
-  Enabled: true
-  Max: 120
-
 RSpec/ExampleLength:
+  # default is 5
   Max: 10
-
-RSpec/MultipleExpectations:
-  Max: 12
-
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
