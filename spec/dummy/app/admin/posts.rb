@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
+ActiveAdmin.register Post do
   permit_params :author_id, :title, :description, :category, :dt, :position, :published, tag_ids: []
 
   member_action :save, method: [:post] do
@@ -54,6 +54,9 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
       df111 = { if: 'checked', then: 'addClass red', target: '#post_data_field_111_input label' }
       add_field(f, :data_field_111, :boolean, df111)
 
+      df112 = { if: '!checked', then: 'addClass red', target: '#post_data_field_112_input label' }
+      add_field(f, :data_field_112, :boolean, df112)
+
       df121 = { if: 'not_checked', then: 'addClass red', target: '#post_data_field_121_input label' }
       add_field(f, :data_field_121, :boolean, df121)
 
@@ -87,6 +90,9 @@ ActiveAdmin.register Post do # rubocop:disable Metrics/BlockLength
 
       df163 = { eq: '163', then: 'addClass red', target: '#post_data_field_163_input label' }
       add_field(f, :data_field_163, :text, df163)
+
+      df164 = { eq: '!164', then: 'addClass red', target: '#post_data_field_164_input label' }
+      add_field(f, :data_field_164, :string, df164)
 
       # --- not
       df171 = { not: '171', then: 'addClass red', target: '#post_data_field_171_input label' }

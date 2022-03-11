@@ -39,8 +39,8 @@
     match: (el, regexp) => regexp.test(el.val()),
     mismatch: (el, regexp) => !regexp.test(el.val()),
     not: (el, value) => el.val() != value,
-    not_blank: el => el.val().trim(),
-    not_checked: el => !el.is(':checked')
+    not_blank: el => !CONDITIONS.blank(el),
+    not_checked: el => !CONDITIONS.checked(el)
   }
 
   const REVERSE_ACTIONS = {
@@ -52,6 +52,8 @@
     hide: el => el.show(),
     slide: el => el.slideDown()
   }
+
+  const REGEXP_NOT = /^!\s*/
 
   class Field {
     constructor(el) {
@@ -91,21 +93,29 @@
     }
 
     evaluateCondition() {
-      let data_if = this.el.data('if')
-      let value = data_if ? CONDITIONS[data_if.trim()] : null
-      if (value) return { condition: value }
-
-      value = this.el.data('eq')
-      if (value) return { condition: CONDITIONS['eq'], condition_arg: value }
-
-      value = this.el.data('not')
-      if (value) return { condition: CONDITIONS['not'], condition_arg: value }
-
-      value = this.el.data('match')
-      if (value) return { condition: CONDITIONS['match'], condition_arg: new RegExp(value) }
-
-      value = this.el.data('mismatch')
-      if (value) return { condition: CONDITIONS['mismatch'], condition_arg: new RegExp(value) }
+      let value
+      if (value = this.el.data('if')) {
+        if (REGEXP_NOT.test(value)) value = 'not_' + value.replace(REGEXP_NOT, '')
+        return { condition: CONDITIONS[value] }
+      }
+      if (value = this.el.data('eq')) {
+        if (REGEXP_NOT.test(value)) {
+          return { condition: CONDITIONS['not'], condition_arg: value.replace(REGEXP_NOT, '') }
+        }
+        return { condition: CONDITIONS['eq'], condition_arg: value }
+      }
+      if (value = this.el.data('not')) {
+        if (REGEXP_NOT.test(value)) {
+          return { condition: CONDITIONS['eq'], condition_arg: value.replace(REGEXP_NOT, '') }
+        }
+        return { condition: CONDITIONS['not'], condition_arg: value }
+      }
+      if (value = this.el.data('match')) {
+        return { condition: CONDITIONS['match'], condition_arg: new RegExp(value) }
+      }
+      if (value = this.el.data('mismatch')) {
+        return { condition: CONDITIONS['mismatch'], condition_arg: new RegExp(value) }
+      }
 
       this.custom_function = this.el.data('function')
       if (this.custom_function) {

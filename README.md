@@ -47,12 +47,12 @@ Conditions:
 
 - **data-if**: check a condition, values:
   + **checked**: check if a checkbox is checked (ex. `"data-if": "checked"`)
-  + **not_checked**: check if a checkbox is not checked
+  + **not_checked**: check if a checkbox is not checked (equivalent to `"data-if": "!checked"`)
   + **blank**: check if a field is blank
   + **not_blank**: check if a field is not blank
   + **changed**: check if the value of an input is changed (dirty)
-- **data-eq**: check if a field has a specific value (ex. `"data-eq": "42"`)
-- **data-not**: check if a field has not a specific value
+- **data-eq**: check if a field has a specific value (ex. `"data-eq": "42"` or `"data-eq": "!5"`)
+- **data-not**: check if a field has not a specific value (equivalent to `"data-eq": "!something"`)
 - **data-match**: check if a field match a regexp
 - **data-mismatch**: check if a field doesn't match a regexp (ex. `"data-mismatch": "^\d+$"`)
 - **data-function**: check the return value of a custom function (ex. `"data-function": "my_check"`)
