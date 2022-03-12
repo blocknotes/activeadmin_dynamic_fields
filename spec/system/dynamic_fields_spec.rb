@@ -119,11 +119,10 @@ RSpec.describe 'Dynamic fields', type: :system do
       test_set_css('#post_data_field_211_input label.red', action: [:click, '#post_data_field_211'])
 
       # --- callback
-      # TODO: fix me
-      # spec_message('check data-then="callback ..." action')
-      # test_set_css('body.test_callback_arg', one_way: true, action: [:click, '#post_data_field_221'])
-      # find('#post_data_field_222').click
-      # expect(page).to have_css('#post_data_field_222[data-df-errors="callback function not found"]')
+      spec_message('check data-then="callback ..." action')
+      test_set_css('body.some_class', one_way: true, action: [:click, '#post_data_field_221'])
+      find('#post_data_field_222').click
+      expect(page).to have_css('#post_data_field_222[data-df-errors="callback function not found"]')
 
       # --- setValue
       spec_message('check data-then="setValue ..." action')

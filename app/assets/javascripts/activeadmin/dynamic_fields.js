@@ -80,8 +80,8 @@
       const action = this.el.data('then') || this.el.data('action') || ''
       const else_action = this.el.data('else') || ''
 
+      this.action_arg = action == 'callback' ? this.el.data('callback') : this.el.data('args')
       this.action = ACTIONS[action]
-      this.action_arg = this.el.data('args')
       this.reverse_action = REVERSE_ACTIONS[action]
       this.else_action = ACTIONS[else_action]
       this.else_action_arg = this.el.data('elseArgs')

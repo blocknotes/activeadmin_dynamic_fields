@@ -67,8 +67,8 @@ Actions:
   + **addStyle**: adds some styles (ex. `data: { then: "addStyle", args: "color: #fb1; font-size: 12px" }`)
   + **setText**: set the text of an element (ex. `data: { then: "setText", args: "A sample text" }`)
   + **setValue**: set the value of an input element (ex. `data: { then: "setValue", args: "A sample value" }`)
-  + **callback**: call a function (with arguments: **data-args**) (ex. `data: { then: "callback" }`)
-- **data-args**: extra arguments for the action, for callback action this parameter is the name of the JS function to call
+  + **callback**: call a function (**data-args** for arguments) (ex. `data: { then: "callback", callback: "myFunction" }`)
+- **data-args**: extra arguments for the action
 - **data-else**: action to trigger when the condition check is not true (ex. `data: { else: "fade" }`)
 - **data-else-args**: extra arguments for the else action (ex. `data: { else: "addClass", else_args: "red" }`)
 
@@ -125,13 +125,13 @@ function title_empty(el) {
 - Call a callback function as action:
 
 ```rb
-data = { if: 'checked', then: 'callback', args: 'set_title' }
+data = { if: 'checked', then: 'callback', callback: 'set_title', args: 'Some title' }
 f.input :published, input_html: { data: data }
 ```
 
 ```js
-function set_title(el) {
-  console.log(el.value());
+function set_title(el, text) {
+  console.log(text);
 }
 ```
 

@@ -127,7 +127,7 @@ ActiveAdmin.register Post do
       add_field(f, :data_field_211, :boolean, df211)
 
       # --- callback
-      df221 = { if: 'checked', then: 'callback', args: 'test_callback' }
+      df221 = { if: 'checked', then: 'callback', callback: 'test_callback', args: 'some_class' }
       add_field(f, :data_field_221, :boolean, df221)
 
       df222 = { if: 'checked', then: 'callback', args: 'missing_callback' }
