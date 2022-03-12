@@ -53,16 +53,16 @@ RSpec.describe 'Dynamic fields', type: :system do
     expect(page).to have_css(target)
   end
 
-  def test_change_css(target, attrs1, attrs2, options = {})
+  def test_change_css(target, options = {})
     spec_message("test change CSS on #{target} ...")
 
-    expect(page).to have_css(target, attrs1)
+    expect(page).to have_css(target, **options[:attrs1])
     block_given? ? yield : apply_action(options[:action])
-    expect(page).to have_css(target, attrs2)
+    expect(page).to have_css(target, **options[:attrs2])
     return if options[:one_way]
 
     block_given? ? yield : apply_action(options[:action], inverse: true)
-    expect(page).to have_css(target, attrs1)
+    expect(page).to have_css(target, **options[:attrs1])
   end
 
   context 'with some dynamic fields' do
@@ -132,17 +132,17 @@ RSpec.describe 'Dynamic fields', type: :system do
       # --- hide
       spec_message('check data-then="hide" action')
       target = '#post_data_field_241_input .inline-hints'
-      test_change_css(target, { visible: :visible }, { visible: :hidden }, action: [:click, '#post_data_field_241'])
+      test_change_css(target, { attrs1: { visible: :visible }, attrs2: { visible: :hidden }, action: [:click, '#post_data_field_241'] })
 
       # --- fade
       spec_message('check data-then="fade" action')
       target = '#post_data_field_251_input .inline-hints'
-      test_change_css(target, { visible: :visible }, { visible: :hidden }, action: [:click, '#post_data_field_251'])
+      test_change_css(target, { attrs1: { visible: :visible }, attrs2: { visible: :hidden }, action: [:click, '#post_data_field_251'] })
 
       # --- slide
       spec_message('check data-then="slide" action')
       target = '#post_data_field_261_input .inline-hints'
-      test_change_css(target, { visible: :visible }, { visible: :hidden }, action: [:click, '#post_data_field_261'])
+      test_change_css(target, { attrs1: { visible: :visible }, attrs2: { visible: :hidden }, action: [:click, '#post_data_field_261'] })
 
       # --- setText
       spec_message('check data-then="setText ..." action')
@@ -154,7 +154,7 @@ RSpec.describe 'Dynamic fields', type: :system do
       spec_message('check data-then="addStyle ..." action')
       style1 = { style: { 'margin-right': '20px' } }
       style2 = { style: 'margin-right: 20px; font-size: 10px; padding: 3px' }
-      test_change_css('#post_data_field_281', style1, style2, action: [:click, '#post_data_field_281'])
+      test_change_css('#post_data_field_281', { attrs1: style1, attrs2: style2, action: [:click, '#post_data_field_281'] })
 
       # --- gtarget
       spec_message('check data-gtarget="..."')
