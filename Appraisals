@@ -26,3 +26,11 @@ appraise 'rails61-activeadmin' do
   gem 'activeadmin'
   gem 'rails', '~> 6.1.0'
 end
+
+appraise 'rails70-activeadmin' do
+  gem 'activeadmin'
+  gem 'rails', '~> 7.0.0'
+
+  # NOTE: workaround for "undefined method `assets' for #<Rails::Application::Configuration:...>"
+  gem 'sprockets-rails', '~> 3.4.2'
+end
