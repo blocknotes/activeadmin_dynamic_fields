@@ -3,8 +3,8 @@
 source "https://rubygems.org"
 
 gem "activeadmin"
-gem "sprockets-rails", "~> 3.4.2"
 gem "rails", "~> 7.0.0"
+gem "sprockets-rails", "~> 3.4.2"
 
 group :development, :test do
   gem "puma"
