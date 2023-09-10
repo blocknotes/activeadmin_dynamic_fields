@@ -22,4 +22,10 @@ class Author < ApplicationRecord
   def to_s
     "#{name} (#{age})"
   end
+
+  class << self
+    def ransackable_attributes(_auth_object = nil)
+      ["age", "created_at", "email", "id", "name", "updated_at"]
+    end
+  end
 end

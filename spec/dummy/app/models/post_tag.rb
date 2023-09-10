@@ -6,4 +6,10 @@ class PostTag < ApplicationRecord
 
   validates :post, presence: true
   validates :tag,  presence: true
+
+  class << self
+    def ransackable_attributes(_auth_object = nil)
+      ["created_at", "id", "post_id", "tag_id", "updated_at"]
+    end
+  end
 end
