@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby: ['2.7', '3.0']
+        ruby: ['3.0']
         gemfile: ['rails61_activeadmin29', 'rails61_activeadmin']
 
     env:
@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -33,7 +33,7 @@ jobs:
         run: bundle exec rspec --profile
 
       - name: On failure, archive screenshots as artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: test-failed-screenshots
