@@ -23,3 +23,24 @@ appraise 'rails70-activeadmin' do
   gem 'nokogiri', '~> 1.17.2'
   gem 'sqlite3', '~> 1.7.0'
 end
+
+appraise 'rails71-activeadmin' do
+  gem 'activeadmin'
+  gem 'rails', '~> 7.1.0'
+
+  gem 'sqlite3'
+end
+
+appraise 'rails72-activeadmin' do
+  gem 'activeadmin'
+  gem 'rails', '~> 7.2.0'
+
+  gem 'sqlite3'
+end
+
+appraise 'rails80-activeadmin' do
+  gem 'activeadmin'
+  gem 'rails', '~> 8.0.0'
+
+  gem 'sqlite3'
+end
