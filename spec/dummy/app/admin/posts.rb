@@ -3,6 +3,8 @@
 ActiveAdmin.register Post do
   permit_params :author_id, :title, :description, :category, :dt, :position, :published, tag_ids: []
 
+  remove_filter :state
+
   member_action :save, method: [:post] do
     render ActiveAdmin::DynamicFields.update(resource, params)
   end

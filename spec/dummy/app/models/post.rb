@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class Post < ApplicationRecord
-  enum state: %i[available unavailable arriving]
+  if Gem::Version.new(Rails.version) >= Gem::Version.new('8.0')
+    enum :state, %i[available unavailable arriving]
+  else
+    enum state: %i[available unavailable arriving]
+  end
 
   belongs_to :author, inverse_of: :posts, autosave: true
 
@@ -10,7 +14,7 @@ class Post < ApplicationRecord
   has_many :post_tags, inverse_of: :post, dependent: :destroy
   has_many :tags, through: :post_tags
 
-  serialize :description, JSON
+  serialize :description, coder: JSON
 
   after_initialize -> { self.description = {} if description.nil? }
 
