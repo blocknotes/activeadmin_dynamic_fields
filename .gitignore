@@ -4,6 +4,7 @@
 /.rspec_failures
 /.rubocop-*
 /Gemfile.lock
+/gemfiles/.bundle/config
 
 /_misc/
 /spec/dummy/db/*.sqlite3*
