@@ -26,7 +26,12 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
-  config.fixture_path = Rails.root.join('spec/fixtures')
+  if Gem::Version.new(Rails.version) >= Gem::Version.new('7.1')
+    config.fixture_paths = [Rails.root.join('spec/fixtures')]
+  else
+    config.fixture_path = Rails.root.join('spec/fixtures')
+  end
+
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
 
