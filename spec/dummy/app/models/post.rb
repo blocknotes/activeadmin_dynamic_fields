@@ -14,7 +14,11 @@ class Post < ApplicationRecord
   has_many :post_tags, inverse_of: :post, dependent: :destroy
   has_many :tags, through: :post_tags
 
-  serialize :description, coder: JSON
+  if Gem::Version.new(Rails.version) >= Gem::Version.new('7.1')
+    serialize :description, coder: JSON
+  else
+    serialize :description, JSON
+  end
 
   after_initialize -> { self.description = {} if description.nil? }
 
@@ -50,13 +54,11 @@ class Post < ApplicationRecord
     title.upcase
   end
 
-  class << self
-    def ransackable_associations(_auth_object = nil)
-      ["author", "author_profile", "post_tags", "tags"]
-    end
+  def self.ransackable_associations(_auth_object = nil)
+    ["author", "author_profile", "post_tags", "tags"]
+  end
 
-    def ransackable_attributes(_auth_object = nil)
-      ["author_id", "category", "created_at", "description", "dt", "id", "position", "published", "title", "updated_at"]
-    end
+  def self.ransackable_attributes(_auth_object = nil)
+    ["author_id", "category", "created_at", "description", "dt", "id", "position", "published", "title", "updated_at"]
   end
 end
