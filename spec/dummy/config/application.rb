@@ -14,8 +14,10 @@ module Dummy
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    if (Rails::VERSION::MAJOR == 6 && Rails::VERSION::MINOR == 1) || Rails::VERSION::MAJOR >= 7
-      config.active_record.legacy_connection_handling = false
+    config.active_record.legacy_connection_handling = false if Gem::Version.new(Rails.version) < Gem::Version.new('7.1')
+
+    config.before_configuration do
+      ActiveSupport::Cache.format_version = 7.0 if Gem::Version.new(Rails.version) > Gem::Version.new('7.0')
     end
   end
 end
