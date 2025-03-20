@@ -2,7 +2,22 @@
 
 source 'https://rubygems.org'
 
-gemspec
+if ENV['DEVEL'] == '1'
+  rails_ver = ENV.fetch('RAILS_VERSION')
+  gem 'rails', rails_ver
+
+  gem 'activeadmin', ENV.fetch('ACTIVEADMIN_VERSION')
+  gem 'activeadmin_dynamic_fields', path: './'
+
+  if rails_ver.start_with?('7.0')
+    gem 'concurrent-ruby', '1.3.4'
+    gem 'sqlite3', '~> 1.4'
+  else
+    gem 'sqlite3'
+  end
+else
+  gemspec
+end
 
 gem 'bigdecimal'
 gem 'mutex_m'

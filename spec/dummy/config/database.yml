@@ -9,4 +9,5 @@ test:
 
 development:
   <<: *default
-  database: db/dev.sqlite3
+  database: db/development.sqlite3
+  schema_dump: schema_development.rb
