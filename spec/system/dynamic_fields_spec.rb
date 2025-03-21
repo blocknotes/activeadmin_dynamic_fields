@@ -69,7 +69,7 @@ RSpec.describe 'Dynamic fields', type: :system do
     it 'checks the conditions and actions', retry: 3 do # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
       visit "/admin/posts/#{post.id}/edit"
 
-      expect(page).to have_css('#post_data_field_111[data-if="checked"][data-then="addClass red"][data-target="#post_data_field_111_input label"]')
+      expect(page).to have_css('#post_data_field_111[data-if="checked"][data-then="addClass"][data-args="red"][data-target="#post_data_field_111_input label"]')
 
       # --- if
       spec_message('check data-if condition')

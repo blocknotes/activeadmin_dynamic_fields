@@ -77,19 +77,27 @@
     }
 
     evaluateAction() {
-      const action = this.el.data('then') || this.el.data('action') || ''
-      const action_name = action.split(' ', 1)[0]
-      const else_action = this.el.data('else') || ''
-      const else_action_name = else_action.split(' ', 1)[0]
+      const dataAction = this.el.data('then') || this.el.data('action') || ''
+      const actionName = dataAction.split(' ', 1)[0]
+      const dataElse = this.el.data('else') || ''
+      const elseActionName = dataElse.split(' ', 1)[0]
 
-      this.action = ACTIONS[action_name]
-      this.action_arg = action.substring(action.indexOf(' ') + 1)
-      this.reverse_action = REVERSE_ACTIONS[action_name]
-      this.else_action = ACTIONS[else_action_name]
-      this.else_action_arg = else_action.substring(else_action.indexOf(' ') + 1)
-      this.else_reverse_action = REVERSE_ACTIONS[else_action_name]
+      this.action = ACTIONS[actionName]
+      if (actionName == 'callback') {
+        this.action_arg = dataAction.substring(dataAction.indexOf(' ') + 1)
+      } else {
+        this.action_arg = this.el.data('args') || dataAction.substring(dataAction.indexOf(' ') + 1)
+      }
+      this.reverse_action = REVERSE_ACTIONS[actionName]
+      this.else_action = ACTIONS[elseActionName]
+      if (elseActionName == 'callback') {
+        this.else_action_arg = dataElse.substring(dataElse.indexOf(' ') + 1)
+      } else {
+        this.else_action_arg = this.el.data('else-args') || dataElse.substring(dataElse.indexOf(' ') + 1)
+      }
+      this.else_reverse_action = REVERSE_ACTIONS[elseActionName]
 
-      return action_name
+      return actionName
     }
 
     evaluateCondition() {
