@@ -8,6 +8,7 @@ if ENV['DEVEL'] == '1'
 
   gem 'activeadmin', ENV.fetch('ACTIVEADMIN_VERSION')
   gem 'activeadmin_dynamic_fields', path: './'
+  gem 'appraisal', '~> 2.4'
 
   if rails_ver.start_with?('7.0')
     gem 'concurrent-ruby', '1.3.4'
@@ -31,6 +32,7 @@ gem 'cuprite'
 gem 'rspec_junit_formatter'
 gem 'rspec-rails'
 gem 'rspec-retry'
+gem 'simplecov', require: false
 
 # Linters
 gem 'fasterer'
