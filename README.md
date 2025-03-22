@@ -63,13 +63,14 @@ Actions:
   + **hide**: hides elements (ex. `"data-then": "hide", "data-target": ".errors"`)
   + **slide**: hides elements (using sliding)
   + **fade**: hides elements (using fading)
-  + **addClass**: adds classes (ex. `"data-then": "addClass red"`)
-  + **addStyle**: adds some styles (ex. `"data-then": "addStyle color: #fb1; font-size: 12px"`)
-  + **setText**: set the text of an element (ex. `"data-then": "setText A sample text"`)
-  + **setValue**: set the value of an input element (ex. `"data-then": "setValue A sample value"`)
+  + **addClass**: adds classes (ex. `"data-then": "addClass", "data-args": "red"`)
+  + **addStyle**: adds some styles (ex. `"data-then": "addStyle", "data-args": "color: #fb1; font-size: 12px"`)
+  + **setText**: set the text of an element (ex. `"data-then": "setText", "data-args": "A sample text"`)
+  + **setValue**: set the value of an input element (ex. `"data-then": "setValue", "data-args": "A sample value"`)
   + **callback**: call a function (with arguments: **data-args**) (ex. `"data-then": "callback a_fun"`)
+- **data-args**: arguments passed to the triggered action (or to the callback function)
 - **data-else**: action to trigger when the condition check is not true
-- **data-args**: arguments passed to the callback function
+- **data-else-args**: arguments passed to the triggered else action
 
 Targets:
 
@@ -98,14 +99,14 @@ end
 - Add 3 classes (*first*, *second*, *third*) if a checkbox is not checked, else add "forth" class:
 
 ```rb
-data = { if: 'not_checked', then: 'addClass first second third', target: '.grp1', else: 'addClass forth' }
+data = { if: 'not_checked', then: 'addClass', args: 'first second third', target: '.grp1', else: 'addClass', 'else-args': 'forth' }
 f.input :published, input_html: { data: data }
 ```
 
 - Set another field value if a string field is blank:
 
 ```rb
-f.input :title, input_html: { data: { if: 'blank', then: 'setValue 10', target: '#article_position' } }
+f.input :title, input_html: { data: { if: 'blank', then: 'setValue', args: '10', target: '#article_position' } }
 ```
 
 - Use a custom function for conditional check (*title_not_empty()* must be available on global scope) (with alternative syntax for data attributes):
