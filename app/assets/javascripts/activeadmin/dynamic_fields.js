@@ -1,3 +1,4 @@
+/* global $ */
 (function () {
   'use strict'
 
@@ -12,8 +13,9 @@
       }
     },
     callback: (el, name) => {
-      const cb_function = window.hasOwnProperty(name) ? window[name] : null
-      if (typeof cb_function === 'function') cb_function(el.data('args'))
+      const callbackDefined = Object.prototype.hasOwnProperty.call(window, name)
+      const callbackFunction = callbackDefined ? window[name] : null
+      if (typeof callbackFunction === 'function') callbackFunction(el.data('args'))
       else {
         el.attr('data-df-errors', 'callback function not found')
         console.warn(`activeadmin_dynamic_fields callback function not found: ${name}`)
@@ -33,7 +35,7 @@
   // noinspection EqualityComparisonWithCoercionJS, JSUnusedGlobalSymbols
   const CONDITIONS = {
     blank: el => el.val().length === 0 || !el.val().trim(),
-    changed: _el => true,
+    changed: () => true,
     checked: el => el.is(':checked'),
     eq: (el, value) => el.val() == value,
     match: (el, regexp) => regexp.test(el.val()),
@@ -101,34 +103,47 @@
     }
 
     evaluateCondition() {
-      let value
-      if (value = this.el.data('if')) {
+      let value = this.el.data('if')
+      if (value) {
         if (REGEXP_NOT.test(value)) value = 'not_' + value.replace(REGEXP_NOT, '')
+
         return { condition: CONDITIONS[value] }
       }
-      if (value = this.el.data('eq')) {
+
+      value = this.el.data('eq')
+      if (value) {
         if (REGEXP_NOT.test(value)) {
           return { condition: CONDITIONS['not'], condition_arg: value.replace(REGEXP_NOT, '') }
         }
+
         return { condition: CONDITIONS['eq'], condition_arg: value }
       }
-      if (value = this.el.data('not')) {
+
+      value = this.el.data('not')
+      if (value) {
         if (REGEXP_NOT.test(value)) {
           return { condition: CONDITIONS['eq'], condition_arg: value.replace(REGEXP_NOT, '') }
         }
+
         return { condition: CONDITIONS['not'], condition_arg: value }
       }
-      if (value = this.el.data('match')) {
+
+      value = this.el.data('match')
+      if (value) {
         return { condition: CONDITIONS['match'], condition_arg: new RegExp(value) }
       }
-      if (value = this.el.data('mismatch')) {
+
+      value = this.el.data('mismatch')
+      if (value) {
         return { condition: CONDITIONS['mismatch'], condition_arg: new RegExp(value) }
       }
 
       this.custom_function = this.el.data('function')
       if (this.custom_function) {
         value = window[this.custom_function]
-        if (value) return { condition: value }
+        if (value) {
+          return { condition: value }
+        }
         else {
           this.el.attr('data-df-errors', 'custom function not found')
           console.warn(`activeadmin_dynamic_fields custom function not found: ${this.custom_function}`)
@@ -174,16 +189,17 @@
         data: { data: data },
         method: 'POST',
         url: $(this).data('save-url'),
-        complete: function (_req, _status) {
+        complete: function () {
           $(this).data('loading', '0');
         },
-        success: function (data, _status, _req) {
+        success: function (data) {
           if (data.status === 'error') {
             if ($(this).data('show-errors')) {
               let result = '';
               let message = data.message;
               for (let key in message) {
-                if (message.hasOwnProperty(key) && typeof (message[key]) === 'object') {
+                const keyAvailable = Object.prototype.hasOwnProperty.call(message, key)
+                if (keyAvailable && typeof (message[key]) === 'object') {
                   if (result) result += ' - ';
                   result += key + ': ' + message[key].join('; ');
                 }
@@ -240,10 +256,10 @@
         let title = $(this).attr('title')
         $.ajax({
           url: $(this).attr('href'),
-          complete: function (_req, _status) {
+          complete: function () {
             $('#df-dialog').data('loading', '0')
           },
-          success: function (data, _status, _req) {
+          success: function (data) {
             const dialog = $('#df-dialog')
             if (title) dialog.attr('title', title)
             dialog.html(data)
