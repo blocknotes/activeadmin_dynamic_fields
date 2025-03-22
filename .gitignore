@@ -4,10 +4,13 @@
 /.rspec_failures
 /.rubocop-*
 /Gemfile.lock
+/eslint.config.mjs
+/package-lock.json
 /gemfiles/.bundle/config
 
 /_misc/
 /coverage/
+/node_modules/
 /spec/dummy/db/*.sqlite3*
 /spec/dummy/log/
 /spec/dummy/storage/
