@@ -3,9 +3,9 @@ name: Specs Rails 7.1
 
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   test:
