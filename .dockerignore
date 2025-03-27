@@ -1,0 +1,15 @@
+/Makefile
+/LICENSE.txt
+/Gemfile.lock
+/extra/init.sh
+
+/app
+/bin
+/coverage
+/gemfiles
+/spec/dummy/db/*.sqlite3
+/spec/dummy/log
+/spec/dummy/tmp
+/spec/dummy/**/*_spec.rb
+
+/**/*.md

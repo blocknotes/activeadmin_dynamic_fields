@@ -3,10 +3,21 @@
 source 'https://rubygems.org'
 
 if ENV['DEVEL'] == '1'
-  rails_ver = ENV.fetch('RAILS_VERSION')
-  gem 'rails', rails_ver
+  rails_ver = ENV.fetch('RAILS_VERSION', '')
+  activeadmin_ver = ENV.fetch('ACTIVEADMIN_VERSION', '')
 
-  gem 'activeadmin', ENV.fetch('ACTIVEADMIN_VERSION')
+  if rails_ver.empty?
+    gem 'rails'
+  else
+    gem 'rails', "~> #{rails_ver}"
+  end
+
+  if activeadmin_ver.empty?
+    gem 'activeadmin'
+  else
+    gem 'activeadmin', "~> #{activeadmin_ver}"
+  end
+
   gem 'activeadmin_dynamic_fields', path: './'
   gem 'appraisal', '~> 2.4'
 

@@ -1,38 +1,33 @@
+include extra/.env
+
 help:
-	@echo "Main targets: up / down / console / shell"
+	@echo "Main targets: build / specs / up / server / specs / shell"
 
 # Docker commands
-down:
-	docker compose down
 
-up:
-	docker compose up
+build:
+	@rm -f Gemfile.lock
+	@docker compose -f extra/docker-compose.yml build
 
-attach:
-	docker compose attach app
-
-up_attach:
-	docker compose up -d && docker compose attach app
+up: build
+	@docker compose -f extra/docker-compose.yml up
 
 cleanup:
-	docker container rm -f activeadmin_dynamic_fields_app && docker image rm -f activeadmin_dynamic_fields-app
+	@docker compose -f extra/docker-compose.yml down --volumes --rmi local --remove-orphans
 
-# Rails specific commands
-console:
-	docker compose exec -e "PAGER=more" app bin/rails console
+# App commands
 
-routes:
-	docker compose exec app bin/rails routes
+server:
+	@docker compose -f extra/docker-compose.yml exec app bin/rails s -b 0.0.0.0 -p ${SERVER_PORT}
 
 specs:
-	docker compose exec app bin/rspec --fail-fast
-
-# Other commands
-bundle:
-	docker compose exec app bundle
-
-shell:
-	docker compose exec -e "PAGER=more" app bash
+	@docker compose -f extra/docker-compose.yml exec app bin/rspec --fail-fast
 
 lint:
-	docker compose exec app bin/rubocop
+	@docker compose -f extra/docker-compose.yml exec app bin/rubocop
+
+appraisal_update:
+	@docker compose -f extra/docker-compose.yml exec app bin/appraisal update
+
+shell:
+	@docker compose -f extra/docker-compose.yml exec app bash
