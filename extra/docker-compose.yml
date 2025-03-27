@@ -1,0 +1,23 @@
+services:
+  app:
+    container_name: activeadmin_dynamic_fields_app
+    build:
+      context: ..
+      dockerfile: extra/Dockerfile
+      # dockerfile: extra/Dockerfile_alpine
+      args:
+        ACTIVEADMIN_VERSION: ${ACTIVEADMIN:-}
+        RAILS_VERSION: ${RAILS:-}
+        # Debian-based Ruby image:
+        RUBY_IMAGE: ruby:3.4-slim
+        UID: ${UID}
+    user: ${UID}:${GID}
+    ports:
+      - 4000:4000
+    working_dir: /app
+    volumes:
+      - ..:/app
+      - /app/spec/dummy/db
+    stdin_open: true
+    tty: true
+    command: ${COMMAND:-sh}

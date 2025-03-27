@@ -1,38 +1,59 @@
+include extra/.env
+
 help:
-	@echo "Main targets: up / down / console / shell"
+	@echo "Main targets: build / specs / up / console / shell"
 
 # Docker commands
-down:
-	docker compose down
 
-up:
-	docker compose up
-
-attach:
-	docker compose attach app
-
-up_attach:
-	docker compose up -d && docker compose attach app
+build:
+	@rm -f Gemfile.lock
+	@docker compose -f extra/docker-compose.yml build
 
 cleanup:
-	docker container rm -f activeadmin_dynamic_fields_app && docker image rm -f activeadmin_dynamic_fields-app
+	@docker compose -f extra/docker-compose.yml rm -f
+	@docker image rm -f ${COMPOSE_PROJECT_NAME}-app
 
-# Rails specific commands
+up: build
+	@docker compose -f extra/docker-compose.yml up
+
+# App commands
 console:
-	docker compose exec -e "PAGER=more" app bin/rails console
-
-routes:
-	docker compose exec app bin/rails routes
+	@docker compose -f extra/docker-compose.yml exec -e "PAGER=more" app bin/rails console
 
 specs:
-	docker compose exec app bin/rspec --fail-fast
-
-# Other commands
-bundle:
-	docker compose exec app bundle
+	@docker compose -f extra/docker-compose.yml exec app bin/rspec --fail-fast
 
 shell:
-	docker compose exec -e "PAGER=more" app bash
+	@docker compose -f extra/docker-compose.yml exec -e "PAGER=more" app bash
 
-lint:
-	docker compose exec app bin/rubocop
+
+# Docker commands
+# down:
+# 	docker compose down
+
+# up:
+# 	docker compose up
+
+# attach:
+# 	docker compose attach app
+
+# up_attach:
+# 	docker compose up -d && docker compose attach app
+
+# cleanup:
+# 	docker container rm -f activeadmin_dynamic_fields_app && docker image rm -f activeadmin_dynamic_fields-app
+
+# Rails specific commands
+# console:
+# 	docker compose exec -e "PAGER=more" app bin/rails console
+
+# specs:
+# 	docker compose exec app bin/rspec --fail-fast
+
+# Other commands
+
+# shell:
+# 	docker compose exec -e "PAGER=more" app bash
+
+# lint:
+# 	docker compose exec app bin/rubocop
