@@ -1,5 +1,7 @@
 ## Development
 
+### Dev setup
+
 There 3 ways to interact with this project:
 
 1) Using Docker:

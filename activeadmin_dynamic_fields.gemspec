@@ -21,6 +21,4 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'activeadmin', '>= 2.0', '< 4'
-
-  spec.add_development_dependency 'appraisal', '~> 2.4' # rubocop:disable Gemspec/DevelopmentDependencies
 end

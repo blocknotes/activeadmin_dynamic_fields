@@ -26,8 +26,5 @@ specs:
 lint:
 	@docker compose -f extra/docker-compose.yml exec app bin/rubocop
 
-appraisal_update:
-	@docker compose -f extra/docker-compose.yml exec app bin/appraisal update
-
 shell:
 	@docker compose -f extra/docker-compose.yml exec app bash
