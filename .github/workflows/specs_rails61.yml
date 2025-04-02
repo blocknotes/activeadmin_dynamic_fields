@@ -1,5 +1,5 @@
 ---
-name: Specs Rails 7.2
+name: Specs Rails 6.1 with ActiveAdmin 2.9
 
 on:
   pull_request:
@@ -13,10 +13,11 @@ jobs:
 
     strategy:
       matrix:
-        ruby: ['3.2', '3.4']
+        ruby: ['3.0']
 
     env:
-      RAILS_VERSION: 7.2.0
+      RAILS_VERSION: 6.0
+      ACTIVEADMIN_VERSION: 2.9.0
 
     steps:
       - name: Checkout repository
