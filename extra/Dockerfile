@@ -6,7 +6,7 @@ ENV DEVEL=1
 ENV LANG=C.UTF-8
 
 RUN apt-get update -qq
-RUN apt-get install -yqq --no-install-recommends build-essential chromium libyaml-dev nano netcat-traditional pkg-config
+RUN apt-get install -yqq --no-install-recommends build-essential chromium less libyaml-dev nano netcat-traditional pkg-config
 
 ARG BUNDLER_VERSION
 RUN gem install bundler -v ${BUNDLER_VERSION}
@@ -26,6 +26,6 @@ ENV ACTIVEADMIN_VERSION=$ACTIVEADMIN_VERSION
 WORKDIR /app
 COPY . /app
 RUN bundle install
-RUN chown -R app:app /app/spec/dummy/db /usr/local/bundle
+RUN mkdir -p /app/spec/dummy/db && chown -R app:app /app/spec/dummy/db /usr/local/bundle
 
 RUN ln -s /app/extra/.bashrc /home/app/.bashrc
