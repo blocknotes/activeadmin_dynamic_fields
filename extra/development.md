@@ -2,7 +2,7 @@
 
 ### Dev setup
 
-There 3 ways to interact with this project:
+There are 2 ways to interact with this project:
 
 1) Using Docker:
 
@@ -24,19 +24,7 @@ RUBY=3.2 RAILS=7.1.0 ACTIVEADMIN=3.2.0 make up
 # For more commands please check the Makefile
 ```
 
-2) Using Appraisal:
-
-```sh
-export RAILS_ENV=development
-# Install dependencies:
-bin/appraisal
-# Run server (or any command):
-bin/appraisal rails s
-# Or with a specific configuration:
-bin/appraisal rails80-activeadmin rails s
-```
-
-3) With a local setup:
+2) With a local setup:
 
 ```sh
 # Dev setup (set the required envs):
