@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Inline editing', type: :system do
+RSpec.describe 'Inline editing' do
   let(:author) { Author.create!(email: 'some_email@example.com', name: 'John Doe', age: 30) }
   let(:post) { Post.create!(title: 'Test', author: author, description: '') }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Dynamic fields', type: :system do
+RSpec.describe 'Dynamic fields' do
   let(:author) { Author.create!(email: 'some_email@example.com', name: 'John Doe', age: 30) }
   let(:post) { Post.create!(title: 'Test', author: author, description: '') }
 
@@ -19,7 +19,7 @@ RSpec.describe 'Dynamic fields', type: :system do
       find(action[1]).click
     when :fill
       fill_in(action[1], with: inverse ? '' : action[2])
-      find('#post_author_id').click # blur focus
+      find_by_id('post_author_id').click # blur focus
     when :select
       select(inverse ? '' : action[2], from: action[1])
     end
@@ -32,13 +32,13 @@ RSpec.describe 'Dynamic fields', type: :system do
   def test_set_css(target, options = {})
     spec_message("test set#{options[:one_way] ? '' : '/unset'} CSS on #{target} ...")
 
-    expect(page).not_to have_css(target)
+    expect(page).to have_no_css(target)
     block_given? ? yield : apply_action(options[:action])
     expect(page).to have_css(target)
     return if options[:one_way]
 
     block_given? ? yield : apply_action(options[:action], inverse: true)
-    expect(page).not_to have_css(target)
+    expect(page).to have_no_css(target)
   end
 
   def test_unset_css(target, options = {})
@@ -46,7 +46,7 @@ RSpec.describe 'Dynamic fields', type: :system do
 
     expect(page).to have_css(target)
     block_given? ? yield : apply_action(options[:action])
-    expect(page).not_to have_css(target)
+    expect(page).to have_no_css(target)
     return if options[:one_way]
 
     block_given? ? yield : apply_action(options[:action], inverse: true)
@@ -120,14 +120,14 @@ RSpec.describe 'Dynamic fields', type: :system do
       # --- callback
       spec_message('check data-then="callback ..." action')
       test_set_css('body.test_callback_arg', one_way: true, action: [:click, '#post_data_field_221'])
-      find('#post_data_field_222').click
+      find_by_id('post_data_field_222').click
       expect(page).to have_css('#post_data_field_222[data-df-errors="callback function not found"]')
 
       # --- setValue
       spec_message('check data-then="setValue ..." action')
-      expect(find('#post_data_test').value).to be_empty
-      find('#post_data_field_231').click
-      expect(find('#post_data_test').value).to eq 'data test'
+      expect(find_by_id('post_data_test').value).to be_empty
+      find_by_id('post_data_field_231').click
+      expect(find_by_id('post_data_test').value).to eq 'data test'
 
       # --- hide
       spec_message('check data-then="hide" action')
@@ -147,7 +147,7 @@ RSpec.describe 'Dynamic fields', type: :system do
       # --- setText
       spec_message('check data-then="setText ..." action')
       expect(find('#post_data_field_271_input .inline-hints').text).not_to eq 'data test'
-      find('#post_data_field_271').click
+      find_by_id('post_data_field_271').click
       expect(page).to have_css('#post_data_field_271_input .inline-hints', text: 'data test')
 
       # --- addStyle
@@ -159,16 +159,16 @@ RSpec.describe 'Dynamic fields', type: :system do
       # --- gtarget
       spec_message('check data-gtarget="..."')
       test_set_css('body.active_admin.red', action: [:click, '#post_data_field_301'])
-      find('#post_data_field_302').click # checks that using simply "target" will not work
-      expect(page).not_to have_css('body.active_admin.red')
+      find_by_id('post_data_field_302').click # checks that using simply "target" will not work
+      expect(page).to have_no_css('body.active_admin.red')
 
       # --- else
       spec_message('check data-else="..."')
-      expect(page).not_to have_css('#post_data_field_321_input label.red')
+      expect(page).to have_no_css('#post_data_field_321_input label.red')
       expect(page).to have_css('#post_data_field_321_input label.green')
-      find('#post_data_field_321').click
+      find_by_id('post_data_field_321').click
       expect(page).to have_css('#post_data_field_321_input label.red')
-      expect(page).not_to have_css('#post_data_field_321_input label.green')
+      expect(page).to have_no_css('#post_data_field_321_input label.green')
     end
   end
 
@@ -176,14 +176,15 @@ RSpec.describe 'Dynamic fields', type: :system do
     it 'checks the conditions and actions', :aggregate_failures do
       visit '/admin/authors/new'
 
-      expect(page).not_to have_css('body.active_admin.red')
+      expect(page).to have_css('body.active_admin')
+      expect(page).to have_no_css('body.active_admin.red')
       find('body.active_admin .profile.has_many_container .button.has_many_add').click
       fill_in('author_profile_attributes_description', with: 'Some content')
       find('body').click
       expect(page).to have_css('body.active_admin.red')
       fill_in('author_profile_attributes_description', with: '   ')
       find('body').click
-      expect(page).not_to have_css('body.active_admin.red')
+      expect(page).to have_no_css('body.active_admin.red')
     end
   end
 end

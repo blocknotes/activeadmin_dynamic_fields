@@ -2,11 +2,13 @@
 inherit_from:
   - https://relaxed.ruby.style/rubocop.yml
 
-require:
+plugins:
+  - rubocop-capybara
   - rubocop-packaging
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
+  - rubocop-rspec_rails
 
 AllCops:
   TargetRubyVersion: 3.0

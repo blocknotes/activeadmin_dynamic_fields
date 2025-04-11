@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Dialog', type: :system do
+RSpec.describe 'Dialog' do
   let(:author) { Author.create!(email: 'some_email@example.com', name: 'John Doe', age: 30) }
   let(:post) { Post.create!(title: 'Test', author: author, description: '') }
 
@@ -20,7 +20,7 @@ RSpec.describe 'Dialog', type: :system do
       visit "/admin/posts/#{post.id}"
 
       expect(page).to have_css(author_link)
-      expect(page).not_to have_css('.ui-dialog')
+      expect(page).to have_no_css('.ui-dialog')
       find(author_link).click
       expect(page).to have_css('.ui-dialog', visible: :visible)
       expect(page).to have_css('#df-dialog dd', text: author.name)
